@@ -1,3 +1,4 @@
+﻿import { API_BASE_URL } from '../../../core/config/api.config';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { map, tap } from 'rxjs';
@@ -10,7 +11,7 @@ import { CreateUserDto, UpdateUserDto, UserModel } from '../models/user.model';
 })
 export class UsersService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/users';
+  private apiUrl = `${API_BASE_URL}/users`;
 
   private userSignal = signal<UserModel[]>([]);
   public users = this.userSignal.asReadonly();

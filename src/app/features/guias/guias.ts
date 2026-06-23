@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import Swal from 'sweetalert2';
 import { Auth } from '../../core/services/auth';
+import { API_BASE_URL } from '../../core/config/api.config';
 import { AsignacionModel } from '../cursos/models/curso.model';
 import { CursosService } from '../cursos/services/cursos-service';
 import { EstudiantesService } from '../estudiantes/services/estudiantes-service';
@@ -258,7 +259,7 @@ export class Guias {
     if (!url || url.startsWith('http') || url.startsWith('data:') || url.startsWith('blob:')) return url;
 
     const cleanPath = url.startsWith('/') ? url.slice(1) : url;
-    return `http://localhost:3000/${cleanPath}`;
+    return `${API_BASE_URL}/${cleanPath}`;
   }
 
   isGuiaActive(guia: GuiaModel) {

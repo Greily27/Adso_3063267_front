@@ -1,3 +1,4 @@
+﻿import { API_BASE_URL } from '../../../core/config/api.config';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { tap } from 'rxjs';
@@ -10,7 +11,7 @@ import { UsersService } from '../../users/services/users-service';
 export class EstudiantesService {
   private http = inject(HttpClient);
   private userService = inject(UsersService);
-  private apiUrl = 'http://localhost:3000';
+  private apiUrl = API_BASE_URL;
 
   private estudiantesSignal = signal<EstudianteModel[]>([]);
 

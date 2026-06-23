@@ -1,3 +1,4 @@
+﻿import { API_BASE_URL } from '../../../core/config/api.config';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { catchError, forkJoin, of, tap } from 'rxjs';
@@ -11,8 +12,8 @@ import { CreateHorarioDto, HorarioModel, UpdateHorarioDto } from '../models/hora
 export class HorariosService {
   private http = inject(HttpClient);
   private cursosService = inject(CursosService);
-  private apiBaseUrl = 'http://localhost:3000';
-  private apiUrl = 'http://localhost:3000/horarios';
+  private apiBaseUrl = API_BASE_URL;
+  private apiUrl = `${API_BASE_URL}/horarios`;
 
   private horariosSignal = signal<HorarioModel[]>([]);
   public horarios = this.horariosSignal.asReadonly();

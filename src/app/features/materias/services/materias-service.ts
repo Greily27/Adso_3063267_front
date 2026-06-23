@@ -1,3 +1,4 @@
+﻿import { API_BASE_URL } from '../../../core/config/api.config';
 import { HttpClient } from '@angular/common/http';
 import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
@@ -9,7 +10,7 @@ import { CreateMateriaDto, MateriaModel, UpdateMateriaDto } from '../models/mate
 })
 export class MateriasService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/materias';
+  private apiUrl = `${API_BASE_URL}/materias`;
 
   private materiasSignal = signal<MateriaModel[]>([]);
   public materias = this.materiasSignal.asReadonly();
