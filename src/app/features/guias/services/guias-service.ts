@@ -1,4 +1,5 @@
-﻿import { HttpClient } from '@angular/common/http';
+﻿import { API_BASE_URL } from '../../../core/config/api.config';
+import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { catchError, of, tap } from 'rxjs';
 import { CreateGuiaDto, GuiaModel, UpdateGuiaDto } from '../models/guia.model';
@@ -8,7 +9,7 @@ import { CreateGuiaDto, GuiaModel, UpdateGuiaDto } from '../models/guia.model';
 })
 export class GuiasService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/guias';
+  private apiUrl = `${API_BASE_URL}/guias`;
 
   private guiasSignal = signal<GuiaModel[]>([]);
   public guias = this.guiasSignal.asReadonly();

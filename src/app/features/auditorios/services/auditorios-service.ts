@@ -1,3 +1,4 @@
+﻿import { API_BASE_URL } from '../../../core/config/api.config';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { tap } from 'rxjs';
@@ -15,7 +16,7 @@ import {
 })
 export class AuditoriosService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000';
+  private apiUrl = API_BASE_URL;
 
   private auditoriosSignal = signal<AuditorioModel[]>([]);
   private reservasSignal = signal<ReservaAuditorioModel[]>([]);

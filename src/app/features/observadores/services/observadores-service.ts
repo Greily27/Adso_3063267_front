@@ -1,3 +1,4 @@
+﻿import { API_BASE_URL } from '../../../core/config/api.config';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { tap } from 'rxjs';
@@ -8,7 +9,7 @@ import { CreateObservadorDto, ObservadorModel, UpdateObservadorDto } from '../mo
 })
 export class ObservadoresService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/observadores';
+  private apiUrl = `${API_BASE_URL}/observadores`;
 
   private observadoresSignal = signal<ObservadorModel[]>([]);
   public observadores = this.observadoresSignal.asReadonly();

@@ -1,4 +1,5 @@
-﻿import { Injectable, inject, signal, computed } from '@angular/core';
+﻿import { API_BASE_URL } from '../config/api.config';
+import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, Observable, of, tap } from 'rxjs';
 import { LoginInterface } from '../../auth/interfaces/login';
@@ -51,7 +52,7 @@ export class Auth {
 
   private http = inject(HttpClient);
   private router = inject(Router);
-  private readonly API_URL = 'http://localhost:3000/auth';
+  private readonly API_URL = `${API_BASE_URL}/auth`;
 
   // 1. Estado privado (Signal) - Almacena el objeto completo del back
   private _authStatus = signal<AuthResponse | null>(null);

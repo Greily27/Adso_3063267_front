@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Auth } from '../../services/auth';
+import { API_BASE_URL } from '../../config/api.config';
 
 @Component({
   selector: 'app-admin-layout',
@@ -216,7 +217,7 @@ export class AdminLayoutComponent {
       ? relativePhotoPath
       : `uploads/${relativePhotoPath}`;
 
-    return `http://localhost:3000/${staticPhotoPath}`;
+    return `${API_BASE_URL}/${staticPhotoPath}`;
   }
 
   private isRawBase64Image(value: string) {

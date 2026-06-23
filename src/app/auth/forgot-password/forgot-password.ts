@@ -66,14 +66,14 @@ export class ForgotPassword {
     this.isLoading = false;
 
     const message = err?.status === 404
-      ? 'El endpoint /auth/forgot-password no existe todavia en el backend.'
+      ? 'El endpoint /auth/forgot-password no existe todavía en el backend.'
       : err?.status === 0
-        ? 'No se pudo conectar con el backend en http://localhost:3000.'
-        : err?.error?.message ?? 'No se pudo enviar el enlace de recuperacion.';
+        ? 'No se pudo conectar con el backend publicado.'
+        : err?.error?.message ?? 'No se pudo enviar el enlace de recuperación.';
 
     Swal.fire({
       icon: 'error',
-      title: 'No se envio el correo',
+      title: 'No se envió el correo',
       text: message,
       confirmButtonText: 'Aceptar',
       confirmButtonColor: '#146b50'

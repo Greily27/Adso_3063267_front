@@ -1,3 +1,4 @@
+﻿import { API_BASE_URL } from '../../../core/config/api.config';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { tap } from 'rxjs';
@@ -8,7 +9,7 @@ import { CreateNotaDto, NotaModel, UpdateNotaDto } from '../models/nota.model';
 })
 export class NotasService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/notas';
+  private apiUrl = `${API_BASE_URL}/notas`;
 
   private notasSignal = signal<NotaModel[]>([]);
   public notas = this.notasSignal.asReadonly();

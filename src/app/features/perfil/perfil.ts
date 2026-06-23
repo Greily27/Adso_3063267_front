@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { forkJoin, of } from 'rxjs';
 import { Auth } from '../../core/services/auth';
+import { API_BASE_URL } from '../../core/config/api.config';
 import { AsignacionModel, CursoModel as CursoAsignacionModel, MateriaModel } from '../cursos/models/curso.model';
 import { CursosService } from '../cursos/services/cursos-service';
 import { CursoModel as EstudianteCursoModel, EstudianteModel, UpdateEstudianteDto } from '../estudiantes/models/estudiante.model';
@@ -360,7 +361,7 @@ export class Perfil {
       ? relativePhotoPath
       : `uploads/${relativePhotoPath}`;
 
-    return `http://localhost:3000/${staticPhotoPath}`;
+    return `${API_BASE_URL}/${staticPhotoPath}`;
   }
 
   private isRawBase64Image(value: string) {

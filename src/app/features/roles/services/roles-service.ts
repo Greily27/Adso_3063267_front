@@ -1,3 +1,4 @@
+﻿import { API_BASE_URL } from '../../../core/config/api.config';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { CreateRoleDto, RoleModel } from '../models/roles.model';
@@ -8,7 +9,7 @@ import { tap } from 'rxjs';
 })
 export class RolesService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/roles';
+  private apiUrl = `${API_BASE_URL}/roles`;
 
   private rolesSignal = signal<RoleModel[]>([]);
   public roles = this.rolesSignal.asReadonly();
@@ -28,7 +29,7 @@ export class RolesService {
   updateRole(id: number, updatedRole: Partial<CreateRoleDto>) {
     return this.http.patch<RoleModel>(`${this.apiUrl}/${id}`, updatedRole).pipe(
       tap((updatedData) => {
-        // Actualizamos la señal buscando el rol por ID y fusionando los cambios
+        // Actualizamos la seÃ±al buscando el rol por ID y fusionando los cambios
         this.rolesSignal.update(roles =>
           roles.map(role => role.id === id ? { ...role, ...updatedData } : role)
         );

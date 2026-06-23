@@ -1,4 +1,5 @@
-﻿import { HttpClient } from '@angular/common/http';
+﻿import { API_BASE_URL } from '../../../core/config/api.config';
+import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { catchError, of, tap } from 'rxjs';
 import { CreatePeriodoDto, PeriodoModel, UpdatePeriodoDto } from '../models/periodo.model';
@@ -8,7 +9,7 @@ import { CreatePeriodoDto, PeriodoModel, UpdatePeriodoDto } from '../models/peri
 })
 export class PeriodosService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/periodo';
+  private apiUrl = `${API_BASE_URL}/periodo`;
 
   private periodosSignal = signal<PeriodoModel[]>([]);
   public periodos = this.periodosSignal.asReadonly();

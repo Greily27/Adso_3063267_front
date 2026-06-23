@@ -1,3 +1,4 @@
+﻿import { API_BASE_URL } from '../../../core/config/api.config';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { catchError, of, tap } from 'rxjs';
@@ -8,7 +9,7 @@ import { BoletinPublicadoModel, PublicarBoletinesDto } from '../models/boletin.m
 })
 export class BoletinesService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/boletines';
+  private apiUrl = `${API_BASE_URL}/boletines`;
   private readonly boletinesStorageKey = 'boletines-publicados';
 
   private boletinesPublicadosSignal = signal<BoletinPublicadoModel[]>([]);
