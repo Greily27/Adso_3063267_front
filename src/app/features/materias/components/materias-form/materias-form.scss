@@ -1,0 +1,16 @@
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 360px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+@media (max-width: 480px) {
+  .form-container {
+    min-width: 0;
+  }
+}

@@ -1,0 +1,236 @@
+﻿<div class="header">
+    <div class="page-heading">
+      <div>
+      <h1>{{ pageTitle() }}</h1>
+      <p>{{ pageSubtitle() }}</p>
+    </div>
+  </div>
+
+  @if (errorMessage) {
+    <div class="error-message">{{ errorMessage }}</div>
+  }
+
+  @if (isDocenteProfile()) {
+    <section class="teacher-schedule-section">
+      <div class="schedule-toolbar">
+        <div>
+          <span class="section-label">Mi horario semanal</span>
+          <h2>Materias por curso</h2>
+        </div>
+
+        <span class="schedule-count">{{ docenteHorariosActual().length }} bloque{{ docenteHorariosActual().length === 1 ? '' : 's' }}</span>
+      </div>
+
+      <div class="schedule-scroll">
+        <table class="schedule-table">
+          <thead>
+            <tr>
+              <th>Hora</th>
+              @for (dia of dias; track dia.key) {
+                <th>{{ dia.label }}</th>
+              }
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (bloque of bloques; track bloque.horaInicio) {
+              <tr [class.break-row]="isBreakBlock(bloque)" [class.extra-row]="bloque.tipo === 'extra'">
+                <th class="time-cell">{{ bloque.horaInicio }} - {{ bloque.horaFin }}</th>
+
+                @if (isBreakBlock(bloque)) {
+                  <td class="break-cell" [attr.colspan]="dias.length">
+                    <strong>{{ getBlockLabel(bloque) }}</strong>
+                  </td>
+                } @else {
+                  @for (dia of dias; track dia.key) {
+                    <td>
+                      @if (getDocenteHorario(dia.key, bloque); as horario) {
+                        @let asignacion = getHorarioAsignacion(horario);
+
+                        <div class="schedule-card filled">
+                          <strong>{{ getMateriaName(asignacion) }}</strong>
+                          <small>{{ getCursoName(asignacion) }}</small>
+                        </div>
+                      } @else {
+                        <div class="schedule-card empty readonly">
+                          <span>Sin clase</span>
+                        </div>
+                      }
+                    </td>
+                  }
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+
+  @if (!isDocenteProfile()) {
+    <section class="schedule-section">
+    <div class="schedule-toolbar">
+      <div>
+        <span class="section-label">Horario semanal por curso</span>
+        <h2>{{ selectedCursoName() }}</h2>
+      </div>
+
+      <div class="course-tools">
+        @if (canViewHorarios()) {
+          <mat-form-field appearance="outline" class="course-select">
+            <mat-label>Curso</mat-label>
+            <mat-select [value]="selectedCursoId()" (selectionChange)="selectCurso($event.value)">
+              @for (curso of cursos(); track curso.id ?? curso.idCurso) {
+                <mat-option [value]="curso.id ?? curso.idCurso">{{ curso.nombreCurso }}</mat-option>
+              } @empty {
+                <mat-option disabled>No hay cursos registrados</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        }
+
+        <span class="schedule-count">{{ horariosCurso().length }} bloque{{ horariosCurso().length === 1 ? '' : 's' }}</span>
+      </div>
+    </div>
+
+    @if (selectedCursoId()) {
+      <div class="schedule-scroll">
+      <table class="schedule-table">
+        <thead>
+          <tr>
+            <th>Hora</th>
+            @for (dia of dias; track dia.key) {
+              <th>{{ dia.label }}</th>
+            }
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (bloque of bloquesVisibles(); track bloque.horaInicio) {
+            <tr [class.break-row]="isBreakBlock(bloque)" [class.extra-row]="bloque.tipo === 'extra'">
+              <th class="time-cell">{{ bloque.horaInicio }} - {{ bloque.horaFin }}</th>
+
+              @if (isBreakBlock(bloque)) {
+                <td class="break-cell" [attr.colspan]="dias.length">
+                  <strong>{{ getBlockLabel(bloque) }}</strong>
+                </td>
+              } @else {
+                @for (dia of dias; track dia.key) {
+                  <td>
+                    @if (getHorario(dia.key, bloque); as horario) {
+                      @let asignacion = getHorarioAsignacion(horario);
+
+                      <div class="schedule-card filled">
+                        <strong>{{ getMateriaName(asignacion) }}</strong>
+                        <small>{{ getDocenteName(asignacion) }}</small>
+
+                        @if (canManageHorarios()) {
+                          <div class="card-actions">
+                            <button mat-icon-button type="button" (click)="openEdit(horario)" aria-label="Editar horario" title="Editar">
+                              <span class="material-icons">edit</span>
+                            </button>
+                            <button mat-icon-button color="warn" type="button" (click)="deleteHorario(horario)" aria-label="Quitar horario" title="Quitar">
+                              <span class="material-icons">delete</span>
+                            </button>
+                          </div>
+                        }
+                      </div>
+                    } @else if (!isAssignableBlock(bloque, dia.key)) {
+                      <div class="schedule-card locked">
+                        <strong>No aplica</strong>
+                        <span>{{ getBlockLabel(bloque) }}</span>
+                      </div>
+                    } @else if (canManageHorarios()) {
+                      <button class="schedule-card empty" type="button" (click)="openCreate(dia.key, bloque)">
+                        <strong>{{ bloque.tipo === 'extra' ? 'Asignar 10/11' : 'Asignar' }}</strong>
+                        <span>{{ dia.label }} {{ bloque.horaInicio }}</span>
+                      </button>
+                    } @else {
+                      <div class="schedule-card empty readonly">
+                        <span>Sin clase</span>
+                      </div>
+                    }
+                  </td>
+                }
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+      </div>
+    } @else {
+      <p class="empty-state">{{ isStudentProfile() ? 'No tienes un curso asignado para consultar el horario.' : 'Selecciona un curso para crear o consultar su horario semanal.' }}</p>
+    }
+    </section>
+  }
+
+  @if (canViewHorarios()) {
+    <section class="teacher-schedule-section">
+    <div class="schedule-toolbar">
+      <div>
+        <span class="section-label">Consulta por docente</span>
+        <h2>Horario del docente</h2>
+      </div>
+
+      <mat-form-field appearance="outline" class="teacher-select">
+        <mat-label>Docente</mat-label>
+        <mat-select [value]="selectedDocenteId()" (selectionChange)="selectDocente($event.value)">
+          @for (docente of docentesConHorario(); track docente.id) {
+            <mat-option [value]="docente.id">{{ getUserDisplayName(docente) }}</mat-option>
+          } @empty {
+            <mat-option disabled>No hay docentes con horario</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    @if (selectedDocenteId(); as docenteId) {
+      <div class="schedule-scroll">
+        <table class="schedule-table">
+          <thead>
+            <tr>
+              <th>Hora</th>
+              @for (dia of dias; track dia.key) {
+                <th>{{ dia.label }}</th>
+              }
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (bloque of bloques; track bloque.horaInicio) {
+              <tr [class.break-row]="isBreakBlock(bloque)" [class.extra-row]="bloque.tipo === 'extra'">
+                <th class="time-cell">{{ bloque.horaInicio }} - {{ bloque.horaFin }}</th>
+
+                @if (isBreakBlock(bloque)) {
+                  <td class="break-cell" [attr.colspan]="dias.length">
+                    <strong>{{ getBlockLabel(bloque) }}</strong>
+                  </td>
+                } @else {
+                  @for (dia of dias; track dia.key) {
+                    <td>
+                      @if (getDocenteHorarioById(docenteId, dia.key, bloque); as horario) {
+                        @let asignacion = getHorarioAsignacion(horario);
+
+                        <div class="schedule-card filled">
+                          <strong>{{ getMateriaName(asignacion) }}</strong>
+                          <small>{{ getCursoName(asignacion) }}</small>
+                        </div>
+                      } @else {
+                        <div class="schedule-card empty readonly">
+                          <span>Sin clase</span>
+                        </div>
+                      }
+                    </td>
+                  }
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <p class="empty-state">Selecciona un docente para ver su horario en formato de tabla.</p>
+    }
+    </section>
+  }
+</div>

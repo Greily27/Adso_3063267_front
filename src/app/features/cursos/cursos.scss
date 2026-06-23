@@ -1,0 +1,373 @@
+.header {
+  align-items: stretch;
+  padding: 20px;
+}
+
+.page-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  margin-bottom: 18px;
+}
+
+.page-heading h1 {
+  margin: 0;
+}
+
+.teacher-dashboard {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  width: 100%;
+  align-items: start;
+}
+
+.teacher-welcome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  grid-column: 1 / -1;
+}
+
+.teacher-welcome h2 {
+  margin: 0;
+  color: #12213d;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.teacher-welcome p {
+  margin: 6px 0 0;
+  color: #5f6673;
+  font-size: 16px;
+}
+
+.teacher-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #146b50;
+  font-weight: 600;
+}
+
+.teacher-badge .material-icons {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #e5f4ec;
+}
+
+.assigned-grid,
+.teaching-section {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(28, 50, 82, .08);
+}
+
+.assigned-grid {
+  display: grid;
+  align-content: start;
+}
+
+.assigned-course {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 18px;
+  padding: 24px;
+  background: #f4fbf7;
+}
+
+.section-label {
+  display: block;
+  margin-bottom: 6px;
+  color: #146b50;
+  font-weight: 700;
+}
+
+.assigned-course h3,
+.teaching-row strong {
+  margin: 0;
+  color: #151a24;
+  font-size: 20px;
+}
+
+.assigned-course p {
+  margin: 8px 0 0;
+  color: #5f6673;
+}
+
+.course-icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  color: #fff;
+}
+
+.course-icon.primary {
+  background: #146b50;
+}
+
+.course-icon.accent {
+  background: #38b86f;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 24px 10px;
+  color: #146b50;
+}
+
+.section-title h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.teaching-list {
+  padding: 0 24px 22px;
+}
+
+.teaching-row {
+  display: grid;
+  grid-template-columns: auto minmax(180px, 1fr) 140px auto;
+  align-items: center;
+  gap: 18px;
+  padding: 14px 0;
+  border-top: 1px solid #eeeeee;
+}
+
+.teaching-row span {
+  color: #5f6673;
+  font-weight: 500;
+}
+
+.teaching-course-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.teaching-course-copy span {
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.teacher-students-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  padding: 16px 24px 22px;
+  border-top: 1px solid #e7edf8;
+  background: #fff;
+}
+
+.teacher-students-panel.compact {
+  padding: 12px 0 18px 74px;
+}
+
+.teacher-students-panel span {
+  padding: 10px 12px;
+  border: 1px solid #e8edf5;
+  border-radius: 6px;
+  color: #283241;
+  background: #fbfcff;
+}
+
+.teacher-students-panel p {
+  margin: 0;
+  color: #666;
+}
+
+.courses-table {
+  width: 100%;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.courses-header,
+.course-row {
+  display: grid;
+  grid-template-columns:
+    minmax(130px, 1.1fr)
+    90px
+    minmax(180px, 1.4fr)
+    110px
+    120px
+    100px
+    110px;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 16px;
+}
+
+.courses-table.readonly-table .courses-header,
+.courses-table.readonly-table .course-row {
+  grid-template-columns:
+    minmax(130px, 1.1fr)
+    90px
+    minmax(180px, 1.4fr)
+    110px
+    120px
+    100px;
+}
+
+.courses-header,
+.students-header {
+  font-weight: 600;
+  background: #f5f5f5;
+  color: #333;
+}
+
+.course-row {
+  min-height: 56px;
+  border-top: 1px solid #eeeeee;
+  cursor: pointer;
+}
+
+.course-row:hover {
+  background: #fafafa;
+}
+
+.course-name,
+.actions,
+.students-toolbar {
+  display: flex;
+  align-items: center;
+}
+
+.course-name {
+  gap: 8px;
+}
+
+.expand-icon {
+  color: #555;
+}
+
+.actions {
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+.courses-header span:last-child {
+  text-align: right;
+}
+
+.course-row > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.students-panel {
+  border-top: 1px solid #e0e0e0;
+  padding: 16px;
+  background: #fbfbfb;
+}
+
+.students-toolbar {
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.students-toolbar h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.students-toolbar mat-form-field {
+  width: min(100%, 320px);
+}
+
+.students-table {
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.students-header,
+.student-row {
+  display: grid;
+  grid-template-columns: minmax(150px, 1.2fr) minmax(110px, .8fr) minmax(150px, 1fr) minmax(120px, .8fr) 90px;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 12px;
+}
+
+.students-table.readonly-table .students-header,
+.students-table.readonly-table .student-row {
+  grid-template-columns: minmax(150px, 1.2fr) minmax(110px, .8fr) minmax(150px, 1fr) minmax(120px, .8fr) 90px;
+}
+
+.student-row {
+  border-top: 1px solid #eeeeee;
+}
+
+.empty-state {
+  padding: 16px;
+  color: #666;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .teacher-welcome,
+  .assigned-course,
+  .teaching-row {
+    align-items: stretch;
+    grid-template-columns: 1fr;
+  }
+
+  .teacher-welcome {
+    flex-direction: column;
+  }
+
+  .teaching-list,
+  .section-title,
+  .assigned-course,
+  .teacher-students-panel {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .teacher-students-panel.compact {
+    padding-left: 16px;
+  }
+
+  .courses-header {
+    display: none;
+  }
+
+  .course-row,
+  .students-header,
+  .student-row {
+    grid-template-columns: 1fr;
+  }
+
+  .students-header {
+    display: none;
+  }
+
+  .students-toolbar,
+  .page-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .students-toolbar mat-form-field {
+    width: 100%;
+  }
+}

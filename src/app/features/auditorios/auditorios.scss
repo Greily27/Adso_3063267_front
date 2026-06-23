@@ -1,0 +1,256 @@
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.header {
+  display: grid;
+  align-items: stretch;
+  justify-items: stretch;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  box-sizing: border-box;
+  padding: 16px;
+  --a-ink: var(--app-ink);
+  --a-muted: var(--app-muted);
+  --a-surface: var(--app-surface);
+  --a-soft: var(--app-soft);
+  --a-line: var(--app-line);
+  --a-hover: var(--app-green-100);
+  --a-accent: var(--app-green-700);
+  --a-strong: var(--app-green-900);
+  --a-shadow: rgba(6, 40, 31, 0.08);
+}
+
+:host-context(body.app-dark-theme) .header {
+  --a-shadow: rgba(0, 0, 0, 0.32);
+}
+
+.auditorios-hero,
+.panel {
+  width: 100%;
+  inline-size: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  justify-self: stretch;
+  border: 1px solid var(--a-line);
+  border-radius: 8px;
+  background: var(--a-surface);
+  color: var(--a-ink);
+  box-shadow: 0 10px 26px var(--a-shadow);
+}
+
+.auditorios-hero {
+  padding: 18px 20px;
+}
+
+.eyebrow {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--a-accent);
+  font-size: 0.75rem;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+h1 {
+  color: var(--a-ink);
+  font-size: 1.7rem;
+  line-height: 1.15;
+}
+
+.auditorios-hero p,
+.panel-heading p {
+  margin-top: 4px;
+  color: var(--a-muted);
+}
+
+.auditorios-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 16px;
+  align-items: start;
+  width: 100%;
+  inline-size: 100%;
+  min-width: 0;
+  justify-self: stretch;
+}
+
+.auditorios-grid .panel:first-child {
+  grid-column: span 3;
+}
+
+.auditorios-grid .panel:last-child {
+  grid-column: span 9;
+}
+
+.reservations-panel {
+  justify-self: stretch;
+}
+
+.panel {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  padding: 16px;
+}
+
+.panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.panel-heading h2 {
+  color: var(--a-ink);
+  font-size: 1.05rem;
+}
+
+.panel-heading button {
+  flex: 0 0 auto;
+}
+
+.form-row,
+.form-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.form-grid {
+  grid-template-columns: repeat(2, minmax(180px, 1fr));
+}
+
+.actions,
+.row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.simple-table,
+.reservations-table {
+  display: grid;
+  min-width: 0;
+  overflow-x: auto;
+  border: 1px solid var(--a-line);
+  border-radius: 8px;
+}
+
+.table-head,
+.table-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 92px;
+  align-items: center;
+  min-width: 0;
+}
+
+.reservations-head,
+.reservation-row {
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) minmax(170px, 1fr) minmax(160px, 0.9fr) minmax(100px, 0.65fr) minmax(230px, 1.25fr) 116px;
+  align-items: center;
+  min-width: 1040px;
+}
+
+.table-head,
+.reservations-head {
+  background: var(--a-soft);
+  color: var(--a-ink);
+  font-size: 0.78rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.table-head span,
+.table-row > *,
+.reservations-head span,
+.reservation-row > * {
+  min-width: 0;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--a-line);
+  overflow-wrap: anywhere;
+}
+
+.table-head span:last-child,
+.table-row > *:last-child {
+  text-align: right;
+}
+
+.table-row,
+.reservation-row {
+  background: var(--a-surface);
+  color: var(--a-ink);
+}
+
+.table-row:hover,
+.reservation-row:hover {
+  background: var(--a-hover);
+}
+
+.table-row:last-child > *,
+.reservation-row:last-child > * {
+  border-bottom: 0;
+}
+
+.row-actions button {
+  width: 34px;
+  height: 34px;
+  padding: 5px;
+}
+
+.row-actions mat-icon {
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+}
+
+.empty-state {
+  padding: 18px 12px;
+  color: var(--a-muted);
+  text-align: center;
+}
+
+.error-message {
+  border: 1px solid var(--app-red-700);
+  border-radius: 8px;
+  background: var(--app-red-100);
+  color: var(--app-red-700);
+  padding: 10px 12px;
+}
+
+@media (max-width: 900px) {
+  .auditorios-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .auditorios-grid .panel:first-child,
+  .auditorios-grid .panel:last-child {
+    grid-column: auto;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .actions button {
+    width: 100%;
+  }
+}

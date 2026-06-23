@@ -1,0 +1,14 @@
+<div class="header">
+    <h1>Gestión de Roles</h1>
+    <button mat-raised-button color="primary" (click)="openDialog()">
+        Nuevo Role
+    </button>
+
+    <app-custom-table 
+    [data]="rolesForTable()" 
+    [columns]="columns" 
+    (edit)="handleEdit($event)"
+    (delete)="handleDelete($event)">
+    </app-custom-table>
+</div>
+

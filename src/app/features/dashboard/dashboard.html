@@ -1,0 +1,307 @@
+﻿<section class="dashboard-page">
+  <header class="dashboard-header">
+    <div>
+      <p class="breadcrumb">Inicio / Dashboard</p>
+      @if (isDocente()) {
+        <h1>Panel docente</h1>
+        <p class="subtitle">Gestiona tus cursos, estudiantes y registros académicos.</p>
+      } @else if (isEstudiante()) {
+        <h1>Panel estudiante</h1>
+        <p class="subtitle">Consulta tu avance académico y seguimiento escolar.</p>
+      } @else {
+        <h1>Dashboard</h1>
+        <p class="subtitle">Resumen general de la gestión académica.</p>
+      }
+    </div>
+  </header>
+
+  @if (isDocente()) {
+    <section class="stats-grid" aria-label="Indicadores del docente">
+      @for (stat of docenteStats(); track stat.label) {
+        <article class="stat-card" [class]="'stat-card ' + stat.accent">
+          <div class="icon-box">
+            <mat-icon>{{ stat.icon }}</mat-icon>
+          </div>
+          <div>
+            <span>{{ stat.label }}</span>
+            <strong>{{ stat.value }}</strong>
+            <p>{{ stat.helper }}</p>
+          </div>
+        </article>
+      }
+    </section>
+
+    <section class="content-grid teacher-grid">
+      <article class="panel">
+        <div class="panel-heading">
+          <div>
+            <mat-icon>class</mat-icon>
+            <h2>Mis cursos</h2>
+          </div>
+          <a mat-button routerLink="/cursos">Ver cursos</a>
+        </div>
+
+        <div class="course-list">
+          @for (curso of docenteCursos(); track curso.id ?? curso.idCurso) {
+            <div class="course-row">
+              <strong>{{ curso.nombreCurso }}</strong>
+              <span>{{ curso.materias.length }} materia{{ curso.materias.length === 1 ? '' : 's' }}</span>
+            </div>
+          } @empty {
+            <p class="empty-state">Aún no tienes cursos asignados.</p>
+          }
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-heading">
+          <div>
+            <mat-icon>bolt</mat-icon>
+            <h2>Accesos docente</h2>
+          </div>
+        </div>
+
+        <div class="quick-actions">
+          <a mat-stroked-button routerLink="/notas">
+            <mat-icon>grade</mat-icon>
+            Registrar notas
+          </a>
+          <a mat-stroked-button routerLink="/observadores">
+            <mat-icon>assignment</mat-icon>
+            Observadores
+          </a>
+          <a mat-stroked-button routerLink="/cursos">
+            <mat-icon>class</mat-icon>
+            Mis cursos
+          </a>
+          <a mat-stroked-button routerLink="/perfil">
+            <mat-icon>account_circle</mat-icon>
+            Mi perfil
+          </a>
+        </div>
+      </article>
+
+      <article class="panel latest-panel">
+        <div class="panel-heading">
+          <div>
+            <mat-icon>school</mat-icon>
+            <h2>Estudiantes a cargo</h2>
+          </div>
+          <a mat-button routerLink="/estudiantes">Ver estudiantes</a>
+        </div>
+
+        <div class="student-list">
+          @for (student of docenteEstudiantes().slice(0, 6); track student.id ?? student.idEstudiante) {
+            <div class="student-row">
+              <div>
+                <strong>{{ student.user.names }} {{ student.user.lastNames }}</strong>
+                <span>{{ student.curso.nombreCurso }}</span>
+              </div>
+            </div>
+          } @empty {
+            <p class="empty-state">Aún no hay estudiantes en tus cursos.</p>
+          }
+        </div>
+      </article>
+    </section>
+  } @else if (isEstudiante()) {
+    <section class="stats-grid" aria-label="Indicadores del estudiante">
+      @for (stat of estudianteStats(); track stat.label) {
+        <article class="stat-card" [class]="'stat-card ' + stat.accent">
+          <div class="icon-box">
+            <mat-icon>{{ stat.icon }}</mat-icon>
+          </div>
+          <div>
+            <span>{{ stat.label }}</span>
+            <strong>{{ stat.value }}</strong>
+            <p>{{ stat.helper }}</p>
+          </div>
+        </article>
+      }
+    </section>
+
+    <section class="summary-strip student-summary">
+      <div class="summary-item">
+        <strong>{{ estudianteCursoName() }}</strong>
+        <span>Curso actual</span>
+      </div>
+      <div class="summary-item">
+        <strong>{{ activePeriodName() }}</strong>
+        <span>Período académico</span>
+      </div>
+      <div class="summary-item">
+        <strong>{{ currentUser()?.document || 'Sin documento' }}</strong>
+        <span>Documento</span>
+      </div>
+      <div class="summary-item">
+        <strong>{{ currentUser()?.email || 'Sin correo' }}</strong>
+        <span>Correo</span>
+      </div>
+    </section>
+
+    <section class="content-grid">
+      <article class="panel">
+        <div class="panel-heading">
+          <div>
+            <mat-icon>grade</mat-icon>
+            <h2>Últimas notas</h2>
+          </div>
+          <a mat-button routerLink="/notas">Ver notas</a>
+        </div>
+
+        <div class="grade-list">
+          @for (grade of latestGrades(); track grade.subject + grade.value) {
+            <div class="grade-row">
+              <strong>{{ grade.value }}</strong>
+              <div>
+                <span>{{ grade.subject }}</span>
+                <p>{{ grade.description }}</p>
+              </div>
+            </div>
+          } @empty {
+            <p class="empty-state">Aún no tienes notas registradas.</p>
+          }
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-heading">
+          <div>
+            <mat-icon>bolt</mat-icon>
+            <h2>Accesos estudiante</h2>
+          </div>
+        </div>
+
+        <div class="quick-actions">
+          <a mat-stroked-button routerLink="/notas">
+            <mat-icon>grade</mat-icon>
+            Mis notas
+          </a>
+          <a mat-stroked-button routerLink="/observadores">
+            <mat-icon>assignment</mat-icon>
+            Observaciones
+          </a>
+          <a mat-stroked-button routerLink="/perfil">
+            <mat-icon>account_circle</mat-icon>
+            Mi perfil
+          </a>
+        </div>
+      </article>
+    </section>
+  } @else {
+    <section class="stats-grid" aria-label="Indicadores principales">
+      @for (stat of stats(); track stat.label) {
+        <article class="stat-card" [class]="'stat-card ' + stat.accent">
+          <div class="icon-box">
+            <mat-icon>{{ stat.icon }}</mat-icon>
+          </div>
+          <div>
+            <span>{{ stat.label }}</span>
+            <strong>{{ stat.value }}</strong>
+            <p>{{ stat.helper }}</p>
+          </div>
+        </article>
+      }
+    </section>
+
+    <section class="summary-strip">
+      <div class="summary-item">
+        <strong>{{ summary().materias }}</strong>
+        <span>Materias</span>
+      </div>
+      <div class="summary-item">
+        <strong>{{ summary().modulos }}</strong>
+        <span>Módulos creados</span>
+      </div>
+      <div class="summary-item">
+        <strong>{{ summary().accesos }}</strong>
+        <span>Accesos de tu rol</span>
+      </div>
+      <div class="summary-item">
+        <strong>{{ summary().usuarios }}</strong>
+        <span>Usuarios</span>
+      </div>
+    </section>
+
+    <section class="content-grid">
+      <article class="panel">
+        <div class="panel-heading">
+          <div>
+            <mat-icon>bar_chart</mat-icon>
+            <h2>Estudiantes por curso</h2>
+          </div>
+          <a mat-button routerLink="/cursos">Ver cursos</a>
+        </div>
+
+        <div class="bars">
+          @for (course of courseDistribution(); track course.name) {
+            <div class="bar-row">
+              <div class="bar-label">
+                <span>{{ course.name }}</span>
+                <strong>{{ course.total }}</strong>
+              </div>
+              <div class="bar-track">
+                <span [style.width]="course.width"></span>
+              </div>
+            </div>
+          } @empty {
+            <p class="empty-state">Aún no hay cursos para mostrar.</p>
+          }
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-heading">
+          <div>
+            <mat-icon>bolt</mat-icon>
+            <h2>Accesos rápidos</h2>
+          </div>
+        </div>
+
+        <div class="quick-actions">
+          <a mat-stroked-button routerLink="/estudiantes">
+            <mat-icon>person_add</mat-icon>
+            Estudiantes
+          </a>
+          @if (canAccessModule('modules')) {
+            <a mat-stroked-button routerLink="/modules">
+              <mat-icon>widgets</mat-icon>
+              Módulos
+            </a>
+          }
+          <a mat-stroked-button routerLink="/materias">
+            <mat-icon>menu_book</mat-icon>
+            Materias
+          </a>
+          <a mat-stroked-button routerLink="/users">
+            <mat-icon>manage_accounts</mat-icon>
+            Usuarios
+          </a>
+        </div>
+      </article>
+
+      <article class="panel latest-panel">
+        <div class="panel-heading">
+          <div>
+            <mat-icon>history</mat-icon>
+            <h2>Últimos estudiantes</h2>
+          </div>
+          <a mat-button routerLink="/estudiantes">Ver todos</a>
+        </div>
+
+        <div class="student-list">
+          @for (student of latestStudents(); track student.name) {
+            <div class="student-row">
+              <div>
+                <strong>{{ student.name }}</strong>
+                <span>{{ student.course }}</span>
+              </div>
+            </div>
+          } @empty {
+            <p class="empty-state">Aún no hay estudiantes registrados.</p>
+          }
+        </div>
+      </article>
+    </section>
+  }
+</section>

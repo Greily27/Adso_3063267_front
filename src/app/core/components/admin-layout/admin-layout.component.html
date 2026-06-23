@@ -1,0 +1,90 @@
+﻿<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport
+    [autoFocus]="false"
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false"
+  >
+    <mat-toolbar class="sidebar-brand">
+      <span class="brand-mark">
+        <img src="/images/institucion/colplinista.png" alt="Logo COLPLINISTA">
+      </span>
+      <span class="brand-text">
+        <strong>COLPLINISTA</strong>
+        <small>Academico</small>
+      </span>
+    </mat-toolbar>
+    @if (authService.isAuthenticated()) {
+      <mat-nav-list class="sidebar-nav">
+        <a mat-list-item class="nav-item" routerLink="/dashboard" routerLinkActive="active-link">
+          <span matListItemIcon class="nav-icon">
+            <mat-icon>dashboard</mat-icon>
+          </span>
+          <span matListItemTitle>Dashboard</span>
+        </a>
+        
+        @for (moduleName of menuItems(); track moduleName) {
+          <a mat-list-item
+            class="nav-item"
+            [routerLink]="getModuleLink(moduleName)"
+            (click)="onModuleClick($event, moduleName)"
+            routerLinkActive="active-link">
+            <span matListItemIcon class="nav-icon">
+              <mat-icon>{{ getModuleIcon(moduleName) }}</mat-icon>
+            </span>
+            <span matListItemTitle>{{ getModuleLabel(moduleName) }}</span>
+          </a>
+        }
+        <a mat-list-item class="nav-item logout-link" (click)="logout()">
+          <span matListItemIcon class="nav-icon">
+            <mat-icon>logout</mat-icon>
+          </span>
+          <span matListItemTitle>Cerrar sesión</span>
+        </a>
+      </mat-nav-list>
+    }
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar class="topbar">
+      @if (isHandset$ | async) {
+        <button type="button" aria-label="Toggle sidenav" matIconButton (click)="drawer.toggle()">
+          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+        </button>
+      }
+      <div class="topbar-title">
+        <span>Gestión académica</span>
+        <small>Panel administrativo</small>
+      </div>
+
+      <div class="topbar-account">
+        <div class="topbar-user">
+          <span class="topbar-user-photo-frame" aria-hidden="true">
+            <mat-icon class="topbar-user-placeholder">account_circle</mat-icon>
+            @if (hasCurrentUserPhoto()) {
+              <img
+                class="topbar-user-photo"
+                [src]="getCurrentUserPhoto()"
+                alt=""
+                (error)="onUserPhotoError($event)"
+              >
+            }
+          </span>
+          <div class="topbar-user-copy">
+            <span>{{ getCurrentUserRole() }}</span>
+            <strong>{{ getCurrentUserName() }}</strong>
+          </div>
+        </div>
+
+        <button type="button" class="theme-toggle" (click)="toggleTheme()">
+          {{ isDarkTheme() ? 'Light' : 'Dark' }}
+        </button>
+      </div>
+    </mat-toolbar>
+    <main class="page-content">
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

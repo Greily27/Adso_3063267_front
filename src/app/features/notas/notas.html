@@ -1,0 +1,245 @@
+﻿<div class="header">
+  <h1>Gestión de Notas</h1>
+  @if (!isAdmin()) {
+    <button mat-raised-button color="primary" (click)="openDialog()">
+      {{ showCreatePanel ? 'Ocultar panel' : 'Nueva Nota' }}
+    </button>
+  }
+
+  @if (errorMessage) {
+    <div class="error-message">{{ errorMessage }}</div>
+  }
+
+  @if (isAdmin()) {
+    <div class="admin-average-groups">
+      @for (group of adminAverageGroups(); track group.key) {
+        <section class="notes-group">
+          <div class="notes-group-header">
+            <div>
+              <span class="group-eyebrow">Promedio por estudiante</span>
+              <h2>{{ group.title }}</h2>
+              <p class="group-teacher">Docente: {{ group.docenteName }}</p>
+            </div>
+            <span class="group-count">{{ group.students.length }} estudiante{{ group.students.length === 1 ? '' : 's' }}</span>
+          </div>
+
+          <div class="average-table">
+            <div class="average-header">
+              <span>Estudiante</span>
+              <span>Notas</span>
+              <span>Promedio</span>
+            </div>
+
+            @for (student of group.students; track student.key) {
+              <div class="average-row">
+                <span>{{ student.studentName }}</span>
+                <span>{{ student.notaCount }}</span>
+                <strong>{{ student.average }}</strong>
+              </div>
+            }
+          </div>
+        </section>
+      } @empty {
+        <p class="empty-state">Aún no hay notas registradas.</p>
+      }
+    </div>
+  } @else if (showCreatePanel) {
+    <form class="notes-panel" [formGroup]="form">
+      <div class="filters-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Período académico</mat-label>
+          <mat-select formControlName="periodo" [compareWith]="comparePeriodo">
+            @for (periodo of periodos(); track getPeriodoId(periodo)) {
+              <mat-option [value]="periodo">
+                {{ periodo.nombrePeriodo }} | {{ formatDate(periodo.fechaInicial) }} - {{ formatDate(periodo.fechaFinal) }}
+              </mat-option>
+            } @empty {
+              <mat-option disabled>No hay periodos registrados</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Curso</mat-label>
+          <mat-select formControlName="curso" [compareWith]="compareCurso">
+            @for (curso of cursosDisponibles(); track getCursoId(curso)) {
+              <mat-option [value]="curso">{{ getCursoName(curso) }}</mat-option>
+            } @empty {
+              <mat-option disabled>No hay cursos disponibles</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Materia</mat-label>
+          <mat-select formControlName="materia" [compareWith]="compareMateria">
+            @for (materia of materiasFiltradas(); track getMateriaId(materia)) {
+              <mat-option [value]="materia">{{ getMateriaName(materia) }}</mat-option>
+            } @empty {
+              <mat-option disabled>{{ form.controls.curso.value ? 'No hay materias asignadas para este curso' : 'Selecciona un curso primero' }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      @if (form.controls.materia.value) {
+        <div class="selected-materia">
+          <span>
+            Periodo: {{ form.controls.periodo.value?.nombrePeriodo || 'Sin periodo' }} |
+            Materia: {{ getMateriaName(form.controls.materia.value) }}
+          </span>
+          <button mat-button type="button" (click)="clearMateria()">Quitar materia</button>
+        </div>
+      }
+
+      <div class="grades-panel">
+        @if (!form.controls.curso.value) {
+          <p class="hint">Mostrando todos los estudiantes de los cursos del docente. Selecciona un curso para filtrar y escoger materia.</p>
+        } @else if (!form.controls.materia.value) {
+          <p class="hint">Selecciona una materia para habilitar la captura de notas.</p>
+        }
+
+        <div class="grades-table">
+          <div class="grades-header">
+            <span>Estudiante</span>
+            <span>Nota</span>
+            <span>Descripcion</span>
+          </div>
+
+          @for (estudiante of estudiantesFiltrados(); track getEstudianteId(estudiante)) {
+            <div class="grades-row">
+              <span class="student-name">{{ getStudentName(estudiante) }}</span>
+              <input
+                class="grade-input"
+                type="number"
+                step="0.1"
+                min="1"
+                max="5"
+                [value]="getPanelDraft(estudiante).valor ?? ''"
+                (input)="updatePanelDraft(estudiante, 'valor', $any($event.target).value)"
+                placeholder="0.0">
+              <input
+                class="description-input"
+                type="text"
+                [value]="getPanelDraft(estudiante).descripcion"
+                (input)="updatePanelDraft(estudiante, 'descripcion', $any($event.target).value)"
+                placeholder="Opcional">
+            </div>
+          } @empty {
+            <p class="empty-state">No hay estudiantes para mostrar.</p>
+          }
+        </div>
+      </div>
+
+      <div class="panel-actions">
+        <button mat-button type="button" (click)="clearPanel()">Limpiar</button>
+        <button mat-raised-button color="primary" type="button" (click)="savePanelNotas()">
+          Guardar notas
+        </button>
+      </div>
+    </form>
+  }
+
+  @if (!isAdmin()) {
+    <div class="notes-groups">
+      @for (group of notasGroupedForTable(); track group.title) {
+        <section class="notes-group">
+          <div class="notes-group-header">
+            <div>
+              <span class="group-eyebrow">Registro de notas</span>
+              <h2>{{ group.title }}</h2>
+            </div>
+            <div class="group-actions">
+              <span class="group-count">{{ group.rows.length }} nota{{ group.rows.length === 1 ? '' : 's' }}</span>
+              <button mat-button type="button" (click)="toggleGroup(group.title)">
+                {{ isGroupCollapsed(group.title) ? 'Extender' : 'Minimizar' }}
+              </button>
+            </div>
+          </div>
+
+          @if (!isGroupCollapsed(group.title)) {
+            <div class="students-table">
+              <div class="students-header">
+                <span>Estudiante</span>
+                <span>Notas</span>
+                <span>Promedio</span>
+                <span>Acciones</span>
+              </div>
+
+              @for (student of group.students; track student.key) {
+                <div class="student-row">
+                  <button class="student-name-button" type="button" (click)="toggleStudent(student.key)">
+                    {{ student.studentName }}
+                  </button>
+                  <span>{{ student.notas.length }}</span>
+                  <strong>{{ getStudentAverage(student) }}</strong>
+                  <button mat-button type="button" (click)="toggleStudent(student.key)">
+                    {{ isStudentExpanded(student.key) ? 'Ocultar notas' : 'Ver notas' }}
+                  </button>
+                </div>
+
+                @if (isStudentExpanded(student.key)) {
+                  <div class="student-notes-panel">
+                    <div class="inline-notes-header">
+                      <span>Nota</span>
+                      <span>Descripcion</span>
+                      <span>Acciones</span>
+                    </div>
+
+                    @for (nota of student.notas; track nota.idNota ?? nota.id) {
+                      <div class="inline-note-row">
+                        <input
+                          class="grade-input"
+                          type="number"
+                          step="0.1"
+                          min="1"
+                          max="5"
+                          [value]="getNotaDraft(nota).valor"
+                          (input)="updateNotaDraft(nota, 'valor', $any($event.target).value)">
+                        <input
+                          class="description-input"
+                          type="text"
+                          [value]="getNotaDraft(nota).descripcion"
+                          (input)="updateNotaDraft(nota, 'descripcion', $any($event.target).value)">
+                        <div class="inline-actions">
+                          <button mat-button type="button" (click)="saveInlineNota(nota)">Guardar</button>
+                          <button mat-button type="button" (click)="handleEdit(nota)">Editar</button>
+                          <button mat-button color="warn" type="button" (click)="deleteInlineNota(nota)">Quitar</button>
+                        </div>
+                      </div>
+                    }
+
+                    <div class="inline-note-row new-note-row">
+                      <input
+                        class="grade-input"
+                        type="number"
+                        step="0.1"
+                        min="1"
+                        max="5"
+                        placeholder="0.0"
+                        [value]="getCreateDraft(student.key).valor ?? ''"
+                        (input)="updateCreateDraft(student.key, 'valor', $any($event.target).value)">
+                      <input
+                        class="description-input"
+                        type="text"
+                        placeholder="Nueva descripcion"
+                        [value]="getCreateDraft(student.key).descripcion"
+                        (input)="updateCreateDraft(student.key, 'descripcion', $any($event.target).value)">
+                      <div class="inline-actions">
+                        <button mat-raised-button color="primary" type="button" (click)="addInlineNota(group, student)">
+                          Agregar
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                }
+              }
+            </div>
+          }
+        </section>
+      } @empty {
+        <p class="empty-state">Aún no hay notas registradas.</p>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,444 @@
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  height: 100%;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$green-palette,
+        tertiary: mat.$red-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
+
+body {
+  // Default the application to a light color theme. This can be changed to
+  // `dark` to enable the dark color theme, or to `light dark` to defer to the
+  // user's system settings.
+  color-scheme: light;
+
+  // Set a default background, font and text colors for the application using
+  // Angular Material's system-level CSS variables. Learn more about these
+  // variables at https://material.angular.dev/guide/system-variables
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Reset the user agent margin.
+  margin: 0;
+  height: 100%;
+}
+/* You can add global styles to this file, and also import other style files */
+
+:root {
+  --app-ink: #10231d;
+  --app-muted: #64736d;
+  --app-surface: #ffffff;
+  --app-soft: #f4f8f5;
+  --app-page-bg: #eef4f0;
+  --app-line: #dce8e1;
+  --app-topbar-bg: rgba(255, 255, 255, 0.94);
+  --app-nav-text: #254239;
+  --app-nav-hover: #f0f7f3;
+  --app-icon-bg: #eef6f1;
+  --app-green-950: #06281f;
+  --app-green-900: #0b3b2e;
+  --app-green-700: #146b50;
+  --app-green-100: #dff3e9;
+  --app-red-700: #b4232f;
+  --app-red-100: #fde2e5;
+}
+
+body {
+  color-scheme: light;
+  background:
+    linear-gradient(180deg, #f4f8f5 0%, #ffffff 42%),
+    #ffffff;
+}
+
+body.app-dark-theme {
+  color-scheme: dark;
+  --app-ink: #eafff5;
+  --app-muted: #8db5a3;
+  --app-surface: #07110d;
+  --app-soft: #0d1f16;
+  --app-page-bg: #000000;
+  --app-line: #1f5f42;
+  --app-topbar-bg: rgba(0, 0, 0, 0.96);
+  --app-nav-text: #c9f3df;
+  --app-nav-hover: #0f2e20;
+  --app-icon-bg: #103d2a;
+  --app-green-950: #f1fff7;
+  --app-green-900: #96f2bf;
+  --app-green-700: #18a862;
+  --app-green-100: #0f3524;
+  --app-red-700: #ff9aa5;
+  --app-red-100: #391117;
+  background: #000000;
+}
+
+.page-content {
+  background: transparent;
+}
+
+.header,
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 22px;
+  border: 1px solid var(--app-line);
+  border-radius: 8px;
+  background: var(--app-surface);
+  box-shadow: 0 18px 42px rgba(6, 40, 31, 0.08);
+}
+
+.header {
+  flex-direction: column;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+
+.header h1,
+.page-header h1 {
+  margin: 0;
+  color: var(--app-green-950);
+  font-size: clamp(1.55rem, 3vw, 2.15rem);
+  font-weight: 850;
+  line-height: 1.08;
+  letter-spacing: 0;
+}
+
+.header p,
+.page-header p {
+  color: var(--app-muted);
+}
+
+.mat-mdc-raised-button.mat-primary,
+.mat-mdc-unelevated-button.mat-primary {
+  background: linear-gradient(135deg, var(--app-green-700), var(--app-green-900)) !important;
+  color: #ffffff !important;
+}
+
+.mat-mdc-outlined-button,
+.mat-mdc-button {
+  border-radius: 8px !important;
+  font-weight: 700 !important;
+}
+
+.mat-mdc-form-field {
+  --mdc-outlined-text-field-focus-outline-color: var(--app-green-700);
+  --mdc-outlined-text-field-hover-outline-color: #9fbdae;
+  --mdc-outlined-text-field-outline-color: var(--app-line);
+  --mdc-outlined-text-field-label-text-color: #52645c;
+  --mdc-outlined-text-field-focus-label-text-color: var(--app-green-700);
+}
+
+.mat-mdc-text-field-wrapper {
+  background: var(--app-surface);
+  border-radius: 8px;
+}
+
+.filters-panel,
+.students-panel,
+.notes-panel,
+.observador-panel,
+.admin-average-groups,
+.notes-group {
+  border-color: var(--app-line) !important;
+  border-radius: 8px !important;
+  background: var(--app-surface) !important;
+  box-shadow: 0 14px 32px rgba(6, 40, 31, 0.07);
+}
+
+.error-message,
+.alerts {
+  border: 1px solid var(--app-red-100) !important;
+  border-radius: 8px !important;
+  background: var(--app-red-100) !important;
+  color: var(--app-red-700) !important;
+}
+
+body.app-dark-theme {
+  .mat-mdc-select-panel,
+  .mat-mdc-autocomplete-panel,
+  .mat-mdc-dialog-container .mdc-dialog__surface {
+    background: var(--app-surface) !important;
+    color: var(--app-ink) !important;
+  }
+
+  .mat-mdc-option,
+  .mat-mdc-form-field,
+  .mat-mdc-input-element,
+  .mat-mdc-select-value,
+  .mat-mdc-select-arrow,
+  .mat-mdc-floating-label,
+  .mat-mdc-dialog-title,
+  .mat-mdc-dialog-content {
+    color: var(--app-ink) !important;
+  }
+
+  .mat-mdc-text-field-wrapper,
+  .mat-mdc-table,
+  .mat-mdc-paginator,
+  .mat-mdc-menu-panel {
+    background: var(--app-surface) !important;
+    color: var(--app-ink) !important;
+  }
+
+  .schedule-section,
+  .teacher-schedule-section,
+  .students-panel,
+  .filters-panel,
+  .notes-panel,
+  .observador-panel,
+  .admin-average-groups,
+  .notes-group,
+  .teacher-table {
+    border-color: var(--app-line) !important;
+    background: var(--app-surface) !important;
+    color: var(--app-ink) !important;
+  }
+
+  .schedule-toolbar,
+  .schedule-table thead th,
+  .teacher-table-header,
+  .empty-state,
+  .time-cell {
+    background: var(--app-soft) !important;
+    color: var(--app-ink) !important;
+  }
+
+  .schedule-table th,
+  .schedule-table td,
+  .teacher-table-header span,
+  .teacher-table-row span {
+    border-color: var(--app-line) !important;
+  }
+
+  .schedule-card.filled,
+  .schedule-card.empty,
+  .schedule-card.locked,
+  .student-row,
+  .student-detail {
+    background: #0b1b13 !important;
+    color: var(--app-ink) !important;
+  }
+
+  .schedule-card strong,
+  .schedule-card span,
+  .schedule-card small,
+  .teacher-table-row span,
+  .header h1,
+  .page-header h1 {
+    color: var(--app-ink) !important;
+  }
+
+  .break-cell,
+  .break-row .time-cell {
+    background: #102619 !important;
+    color: #b8ffd4 !important;
+  }
+
+  .extra-row .time-cell,
+  .extra-row .schedule-card.filled {
+    background: #0e2f21 !important;
+    color: #c8ffe0 !important;
+  }
+
+  .teacher-welcome,
+  .assigned-grid,
+  .assigned-course,
+  .teaching-section,
+  .teacher-students-panel,
+  .courses-table,
+  .students-table,
+  .students-table-card,
+  .students-summary,
+  .details-group,
+  .students-paginator,
+  .grades-panel,
+  .grades-table,
+  .selected-materia,
+  .notes-group,
+  .notes-group-header,
+  .student-notes-panel,
+  .average-table,
+  .profile-table,
+  .filters-panel,
+  .students-panel,
+  .published-item,
+  .empty-preview,
+  .form-container,
+  .form-section,
+  .dialog-content,
+  .dialog-actions,
+  .file-field,
+  .readonly-field {
+    border-color: var(--app-line) !important;
+    background: var(--app-surface) !important;
+    color: var(--app-ink) !important;
+  }
+
+  .courses-header,
+  .course-row,
+  .students-header,
+  .students-head,
+  .students-row,
+  .student-row,
+  .grades-header,
+  .grades-row,
+  .average-header,
+  .average-row,
+  .inline-notes-header,
+  .inline-note-row,
+  .profile-table-header,
+  .profile-table-row,
+  .table-card-header,
+  .students-table-head,
+  .student-record,
+  .student-details,
+  .teaching-row,
+  .assignment-row,
+  .observador-panel,
+  .period-summary,
+  .publish-status,
+  .empty-row,
+  .new-note-row {
+    border-color: var(--app-line) !important;
+    background: var(--app-soft) !important;
+    color: var(--app-ink) !important;
+  }
+
+  .course-row:hover,
+  .student-row:hover,
+  .student-record.expanded,
+  .student-record:nth-child(odd),
+  .student-name-button:hover,
+  .schedule-card.empty:hover {
+    background: var(--app-green-100) !important;
+  }
+
+  .page-heading h1,
+  .title-row h1,
+  .teacher-welcome h2,
+  .section-title h2,
+  .students-toolbar h2,
+  .table-card-header h2,
+  .student-main strong,
+  .details-group h3,
+  .course-name,
+  .assigned-course h3,
+  .teaching-row strong,
+  .teacher-students-panel p,
+  .students-row strong,
+  .published-item strong,
+  .grades-row strong,
+  .student-name,
+  .student-name-button,
+  .panel-heading h2,
+  .section-heading,
+  .readonly-field strong,
+  .assignment-row strong,
+  .profile-table-row span {
+    color: var(--app-ink) !important;
+  }
+
+  .page-heading p,
+  .teacher-welcome p,
+  .assigned-course p,
+  .teaching-row span,
+  .teacher-students-panel span,
+  .student-main small,
+  .details-group dt,
+  .details-group dd,
+  .students-paginator,
+  .students-paginator label,
+  .table-card-header p,
+  .hint,
+  .muted,
+  .empty-state,
+  .empty-preview p,
+  .published-item span,
+  .published-item small,
+  .group-eyebrow,
+  .group-teacher,
+  .file-help,
+  .readonly-field span,
+  .panel-heading p {
+    color: var(--app-muted) !important;
+  }
+
+  .grade-input,
+  .description-input,
+  .students-paginator select,
+  .file-field input[type='file'] {
+    border-color: var(--app-line) !important;
+    background: var(--app-soft) !important;
+    color: var(--app-ink) !important;
+  }
+
+  .grade-input:focus,
+  .description-input:focus {
+    border-color: var(--app-green-700) !important;
+    background: var(--app-surface) !important;
+  }
+
+  .grade-input[readonly],
+  .description-input[readonly],
+  .grade-input:disabled,
+  .description-input:disabled {
+    background: #06120d !important;
+    color: var(--app-muted) !important;
+  }
+
+  .course-icon,
+  .icon-box,
+  .student-avatar,
+  .group-count,
+  .schedule-count {
+    background: var(--app-green-100) !important;
+    color: var(--app-green-900) !important;
+  }
+
+  .alerts,
+  .error-message,
+  .form-error {
+    border-color: var(--app-red-700) !important;
+    background: var(--app-red-100) !important;
+    color: var(--app-red-700) !important;
+  }
+}
+
+app-custom-table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (max-width: 760px) {
+  .header,
+  .page-header,
+  .title-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

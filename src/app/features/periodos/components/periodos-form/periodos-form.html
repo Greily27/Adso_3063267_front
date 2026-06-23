@@ -1,0 +1,43 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Editar Periodo' : 'Nuevo Periodo' }}</h2>
+
+<form [formGroup]="form">
+  <mat-dialog-content class="form-container">
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="nombrePeriodo">
+
+      @if (form.get('nombrePeriodo')?.hasError('required') && form.get('nombrePeriodo')?.touched) {
+        <mat-error>El nombre es obligatorio</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Fecha inicial</mat-label>
+      <input matInput type="date" formControlName="fechaInicial">
+
+      @if (form.get('fechaInicial')?.hasError('required') && form.get('fechaInicial')?.touched) {
+        <mat-error>La fecha inicial es obligatoria</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Fecha final</mat-label>
+      <input matInput type="date" formControlName="fechaFinal">
+
+      @if (form.get('fechaFinal')?.hasError('required') && form.get('fechaFinal')?.touched) {
+        <mat-error>La fecha final es obligatoria</mat-error>
+      }
+    </mat-form-field>
+
+    @if (form.hasError('invalidDateRange') && (form.get('fechaInicial')?.touched || form.get('fechaFinal')?.touched)) {
+      <div class="form-error">La fecha final no puede ser menor que la fecha inicial</div>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+    <button mat-raised-button color="primary" type="button" (click)="onSave()" [disabled]="form.invalid">
+      {{ isEditMode ? 'Actualizar' : 'Guardar' }}
+    </button>
+  </mat-dialog-actions>
+</form>

@@ -1,0 +1,69 @@
+﻿<div class="login-card-container">
+    <section class="brand-panel" aria-label="Informaci&oacute;n institucional">
+        <img src="/mision_colplinista.png" alt="Institución educativa" class="campus-image">
+
+        <div class="brand-content">
+            <img src="/images/institucion/colplinista.png" alt="Logo institucional" class="brand-logo">
+
+            <div>
+                <p class="brand-kicker">Institución educativa</p>
+                <h1>Formando personas, construyendo futuro.</h1>
+            </div>
+        </div>
+    </section>
+
+    <main class="login-panel">
+        <mat-card class="modern-card">
+            <div class="user-badge" aria-hidden="true">
+                <mat-icon>person_outline</mat-icon>
+            </div>
+
+            <mat-card-header>
+                <div class="header-content">
+                    <mat-card-title>Bienvenido</mat-card-title>
+                    <mat-card-subtitle>Inicia sesi&oacute;n para continuar</mat-card-subtitle>
+                </div>
+            </mat-card-header>
+
+            <mat-card-content>
+                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Correo electr&oacute;nico</mat-label>
+                        <input matInput formControlName="email" type="email" placeholder="ejemplo@institucion.edu">
+                        <mat-icon matPrefix>mail_outline</mat-icon>
+                        @if (loginForm.get('email')?.hasError('email') && loginForm.get('email')?.touched) {
+                        <mat-error>Ingresa un correo v&aacute;lido</mat-error>
+                        }
+
+                        @if (loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched) {
+                        <mat-error>El correo es obligatorio</mat-error>
+                        }
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Contrase&ntilde;a</mat-label>
+                        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password"
+                            placeholder="Ingresa tu contraseña">
+                        <mat-icon matPrefix>lock_outline</mat-icon>
+                        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button"
+                            aria-label="Mostrar u ocultar contraseña">
+                            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                        </button>
+                    </mat-form-field>
+
+                    <div class="form-options">
+                        <span></span>
+                        <a routerLink="/auth/forgot-password" class="forgot-password">&iquest;Olvidaste tu contraseña?</a>
+                    </div>
+
+                    <button matButton="filled" class="login-button" [disabled]="loginForm.invalid">Iniciar
+                        sesi&oacute;n</button>
+                </form>
+            </mat-card-content>
+
+            <mat-card-footer class="card-footer">
+                <p>&iquest;No tienes una cuenta? <a routerLink="/auth/sign-in">Contacta a tu institución</a></p>
+            </mat-card-footer>
+        </mat-card>
+    </main>
+</div>

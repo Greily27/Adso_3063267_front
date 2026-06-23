@@ -1,0 +1,17 @@
+﻿<div class="header">
+  <h1>Gestión de Períodos</h1>
+  <button mat-raised-button color="primary" (click)="openDialog()">
+    Nuevo Periodo
+  </button>
+
+  @if (errorMessage) {
+    <div class="error-message">{{ errorMessage }}</div>
+  }
+
+  <app-custom-table
+    [data]="periodosForTable()"
+    [columns]="columns"
+    (edit)="handleEdit($event)"
+    (delete)="handleDelete($event)">
+  </app-custom-table>
+</div>

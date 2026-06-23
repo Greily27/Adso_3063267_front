@@ -1,0 +1,90 @@
+﻿<div class="header">
+  <div class="title-row">
+    <h1>Gestión de Observadores</h1>
+    @if (canManageObservadores()) {
+      <button mat-raised-button color="primary" (click)="openPanel()">
+        {{ showCreatePanel ? 'Ocultar panel' : 'Nuevo observador' }}
+      </button>
+    }
+  </div>
+
+  @if (errorMessage) {
+    <div class="error-message">{{ errorMessage }}</div>
+  }
+
+  @if (showCreatePanel) {
+    <form class="observador-panel" [formGroup]="form" (ngSubmit)="saveObservador()">
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Curso</mat-label>
+          <mat-select formControlName="curso" [compareWith]="compareCurso">
+            @for (curso of cursosDisponibles(); track getCursoId(curso)) {
+              <mat-option [value]="curso">{{ getCursoName(curso) }}</mat-option>
+            } @empty {
+              <mat-option disabled>No hay cursos disponibles</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Estudiante</mat-label>
+          <mat-select formControlName="estudiante" [compareWith]="compareEstudiante" [disabled]="!selectedCurso()">
+            @for (estudiante of estudiantesFiltrados(); track estudiante.id ?? estudiante.idEstudiante) {
+              <mat-option [value]="estudiante">{{ getStudentName(estudiante) }}</mat-option>
+            } @empty {
+              <mat-option disabled>{{ selectedCurso() ? 'No hay estudiantes en este curso' : 'Selecciona un curso primero' }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha</mat-label>
+          <input matInput type="date" formControlName="fecha">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Categoria</mat-label>
+          <mat-select formControlName="categoria">
+            @for (categoria of categorias; track categoria) {
+              <mat-option [value]="categoria">{{ categoria }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        @if (isAdmin()) {
+          <mat-form-field appearance="outline">
+            <mat-label>Docente</mat-label>
+            <mat-select formControlName="docente" [compareWith]="compareDocente">
+              @for (docente of docentesDisponibles(); track docente.id) {
+                <mat-option [value]="docente">{{ getUserName(docente) }}</mat-option>
+              } @empty {
+                <mat-option disabled>No hay docentes disponibles</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        }
+      </div>
+
+      <mat-form-field appearance="outline" class="description-field">
+        <mat-label>Descripcion</mat-label>
+        <textarea matInput rows="4" formControlName="descripcion" maxlength="1000"></textarea>
+      </mat-form-field>
+
+      <div class="panel-actions">
+        <button mat-button type="button" (click)="clearPanel()">Limpiar</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+          {{ editingObservador() ? 'Actualizar observador' : 'Guardar observador' }}
+        </button>
+      </div>
+    </form>
+  }
+
+  <app-custom-table
+    class="observadores-table"
+    [data]="observadoresForTable()"
+    [columns]="columns"
+    [showActions]="canManageObservadores()"
+    (edit)="handleEdit($event)"
+    (delete)="handleDelete($event)">
+  </app-custom-table>
+</div>

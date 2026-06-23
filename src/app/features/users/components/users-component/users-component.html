@@ -1,0 +1,154 @@
+﻿<div class="dialog-shell">
+  <header class="dialog-header">
+    <div class="header-icon">
+      <mat-icon>{{ isEditMode ? 'manage_accounts' : 'person_add' }}</mat-icon>
+    </div>
+    <div>
+      <p>{{ isEditMode ? 'Actualizar informacion' : 'Registrar usuario' }}</p>
+      <h2 mat-dialog-title>{{ isEditMode ? 'Editar usuario' : 'Nuevo usuario' }}</h2>
+    </div>
+  </header>
+
+  <form [formGroup]="form">
+    <mat-dialog-content class="dialog-content">
+      <section class="form-section">
+        <div class="section-heading">
+          <mat-icon>badge</mat-icon>
+          <span>Datos personales</span>
+        </div>
+
+        <div class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Nombres</mat-label>
+            <input matInput formControlName="names">
+            @if (form.get('names')?.hasError('required') && form.get('names')?.touched) {
+              <mat-error>Los nombres son obligatorios</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Apellidos</mat-label>
+            <input matInput formControlName="lastNames">
+            @if (form.get('lastNames')?.hasError('required') && form.get('lastNames')?.touched) {
+              <mat-error>Los apellidos son obligatorios</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Tipo documento</mat-label>
+            <mat-select formControlName="docType">
+              @for (type of documentTypes; track type.value) {
+                <mat-option [value]="type.value">{{ type.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Numero documento</mat-label>
+            <input matInput formControlName="document">
+          </mat-form-field>
+        </div>
+      </section>
+
+      <section class="form-section">
+        <div class="section-heading">
+          <mat-icon>contact_mail</mat-icon>
+          <span>Contacto y acceso</span>
+        </div>
+
+        <div class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Teléfono</mat-label>
+            <input matInput formControlName="phone">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Dirección</mat-label>
+            <input matInput formControlName="address">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Correo</mat-label>
+            <input matInput formControlName="email" type="email">
+            @if (form.get('email')?.hasError('email') && form.get('email')?.touched) {
+              <mat-error>Ingresa un correo válido</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>{{ isEditMode ? 'Nueva contraseña' : 'Contraseña' }}</mat-label>
+            <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+            <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword"
+              aria-label="Mostrar u ocultar contraseña">
+              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            @if (!isEditMode) {
+              <mat-hint>Obligatoria para usuarios nuevos</mat-hint>
+            }
+          </mat-form-field>
+        </div>
+      </section>
+
+      <section class="form-section">
+        <div class="section-heading">
+          <mat-icon>admin_panel_settings</mat-icon>
+          <span>Permisos y estado</span>
+        </div>
+
+        <div class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Estado</mat-label>
+            <mat-select formControlName="isActive">
+              <mat-option [value]="true">Activo</mat-option>
+              <mat-option [value]="false">Inactivo</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Roles</mat-label>
+            <mat-select formControlName="roles" multiple [compareWith]="compareRoles">
+              @for (role of allRoles(); track role.id) {
+                <mat-option [value]="role">{{ role.name }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <div class="file-field wide-field">
+            <span class="file-label">Foto de perfil</span>
+            <input
+              type="file"
+              accept="image/*"
+              (change)="onPhotoSelected($event)">
+            <span class="file-help">
+              {{ form.get('photo')?.value ? 'Imagen seleccionada' : 'Opcional: usara default.jpg' }}
+            </span>
+            @if (photoError) {
+              <span class="file-error">{{ photoError }}</span>
+            }
+          </div>
+
+          @if (showMateriasForDocente) {
+            <mat-form-field appearance="outline" class="wide-field">
+              <mat-label>Materias asignadas</mat-label>
+              <mat-select formControlName="materias" multiple [compareWith]="compareMaterias">
+                @for (materia of allMaterias(); track getMateriaId(materia)) {
+                  <mat-option [value]="materia">{{ getMateriaName(materia) }}</mat-option>
+                } @empty {
+                  <mat-option disabled>No hay materias disponibles</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          }
+        </div>
+      </section>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end" class="dialog-actions">
+      <button mat-stroked-button type="button" (click)="onCancel()">Cancelar</button>
+      <button mat-raised-button color="primary" type="button" (click)="onSave()" [disabled]="form.invalid">
+        <mat-icon>{{ isEditMode ? 'save' : 'person_add' }}</mat-icon>
+        {{ isEditMode ? 'Actualizar' : 'Guardar' }}
+      </button>
+    </mat-dialog-actions>
+  </form>
+</div>

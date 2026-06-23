@@ -1,0 +1,47 @@
+﻿<h2 mat-dialog-title>Editar Nota</h2>
+
+<form [formGroup]="form">
+  <mat-dialog-content class="form-container edit-mode">
+    <mat-form-field appearance="outline">
+      <mat-label>Valor</mat-label>
+      <input matInput type="number" step="0.1" min="1" max="5" formControlName="valor">
+
+      @if (form.get('valor')?.hasError('required') && form.get('valor')?.touched) {
+        <mat-error>El valor es obligatorio</mat-error>
+      }
+
+      @if ((form.get('valor')?.hasError('min') || form.get('valor')?.hasError('max')) && form.get('valor')?.touched) {
+        <mat-error>La nota debe estar entre 1.0 y 5.0</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Período académico</mat-label>
+      <mat-select formControlName="periodo" [compareWith]="comparePeriodo">
+        @for (periodo of periodos(); track getPeriodoId(periodo)) {
+          <mat-option [value]="periodo">
+            {{ periodo.nombrePeriodo }} | {{ formatDate(periodo.fechaInicial) }} - {{ formatDate(periodo.fechaFinal) }}
+          </mat-option>
+        } @empty {
+          <mat-option disabled>No hay periodos registrados</mat-option>
+        }
+      </mat-select>
+
+      @if (form.get('periodo')?.hasError('required') && form.get('periodo')?.touched) {
+        <mat-error>El periodo es obligatorio</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Descripcion</mat-label>
+      <textarea matInput formControlName="descripcion" rows="3"></textarea>
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+    <button mat-raised-button color="primary" type="button" (click)="onSave()" [disabled]="!canSave">
+      Actualizar
+    </button>
+  </mat-dialog-actions>
+</form>

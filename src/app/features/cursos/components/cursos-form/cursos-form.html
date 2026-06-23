@@ -1,0 +1,93 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Editar Curso' : 'Nuevo Curso' }}</h2>
+
+<form [formGroup]="form">
+  <mat-dialog-content>
+    <div class="steps">
+      <span [class.active]="currentStep === 1">1. Curso y materias</span>
+      <span [class.active]="currentStep === 2">2. Asignaciones</span>
+    </div>
+
+    @if (currentStep === 1) {
+      <div class="form-container">
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre del curso</mat-label>
+          <input matInput formControlName="nombreCurso">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Director de curso</mat-label>
+          <mat-select formControlName="directorCurso">
+            <mat-option [value]="null">Sin director</mat-option>
+            @for (user of docenteUsers(); track user.id) {
+              <mat-option [value]="user.id">
+                {{ getUserName(user) }} - {{ user.document }}
+              </mat-option>
+            } @empty {
+              <mat-option disabled>No hay usuarios con rol docente disponibles</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Estado</mat-label>
+          <mat-select formControlName="isActive">
+            <mat-option [value]="true">Activo</mat-option>
+            <mat-option [value]="false">Inactivo</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Materias asignadas al curso</mat-label>
+          <mat-select formControlName="materias" multiple [compareWith]="compareById">
+            @for (materia of materias(); track materia.idMateria ?? materia.id) {
+              <mat-option [value]="materia">{{ getMateriaName(materia) }}</mat-option>
+            } @empty {
+              <mat-option disabled>No hay materias disponibles</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    } @else {
+      <div class="assignment-step">
+        <div class="assignments-list">
+          @for (materia of getSelectedMaterias(); track materia.idMateria ?? materia.id) {
+            <div class="assignment-row">
+              <span>{{ getMateriaName(materia) }}</span>
+              <mat-form-field appearance="outline">
+                <mat-label>Docente</mat-label>
+                <mat-select
+                  [value]="getDocenteForMateria(materia)"
+                  [compareWith]="compareById"
+                  (selectionChange)="setDocenteForMateria(materia, $event.value)">
+                  @for (user of getDocentesForMateria(materia); track user.id) {
+                    <mat-option [value]="user">{{ user.names }} {{ user.lastNames }}</mat-option>
+                  } @empty {
+                    <mat-option disabled>No hay docentes con esta materia asignada</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+          } @empty {
+            <div class="empty-state">Primero selecciona materias para el curso.</div>
+          }
+        </div>
+      </div>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+    @if (currentStep > 1) {
+      <button mat-button type="button" (click)="goBack()">Anterior</button>
+    }
+    @if (currentStep < 2) {
+      <button mat-raised-button color="primary" type="button" (click)="goNext()" [disabled]="!isCurrentStepValid()">
+        Siguiente
+      </button>
+    } @else {
+      <button mat-raised-button color="primary" type="button" (click)="onSave()" [disabled]="!isCurrentStepValid()">
+        {{ isEditMode ? 'Actualizar' : 'Guardar' }}
+      </button>
+    }
+  </mat-dialog-actions>
+</form>

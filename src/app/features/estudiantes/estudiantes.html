@@ -1,0 +1,191 @@
+﻿<div class="header">
+  <section class="students-hero">
+    <div>
+      <span class="eyebrow">Comunidad academica</span>
+      <h1>Gestión de Estudiantes</h1>
+      <p>Administra datos personales, acudientes, curso y contacto de cada estudiante.</p>
+    </div>
+
+    <div class="students-hero-actions">
+      @if (canManageStudents()) {
+        <input
+          #studentsExcelInput
+          class="file-input"
+          type="file"
+          accept=".xlsx,.xls,.csv"
+          (change)="importExcel($event)">
+
+        <button mat-button type="button" (click)="studentsExcelInput.click()" [disabled]="isImporting()">
+          <mat-icon>upload_file</mat-icon>
+          {{ isImporting() ? 'Importando...' : 'Importar Excel' }}
+        </button>
+
+        <button mat-raised-button color="primary" (click)="openDialog()">
+          <mat-icon>person_add</mat-icon>
+          Nuevo Estudiante
+        </button>
+      }
+    </div>
+  </section>
+
+  <section class="students-summary">
+    <div>
+      <span>Total estudiantes</span>
+      <strong>{{ estudiantesForTable().length }}</strong>
+    </div>
+    <div>
+      <span>Con curso asignado</span>
+      <strong>{{ estudiantesWithCourseCount() }}</strong>
+    </div>
+  </section>
+
+  <section class="students-table-card">
+    <div class="table-card-header">
+      <div>
+        <h2>Listado de estudiantes</h2>
+        <p>Haz clic en un estudiante para revisar la información completa.</p>
+      </div>
+    </div>
+
+    <div class="students-table">
+      <div class="students-table-head">
+        <button type="button" (click)="sortBy('studentName')">
+          Estudiante
+          <mat-icon>{{ getSortIcon('studentName') }}</mat-icon>
+        </button>
+        <button type="button" (click)="sortBy('studentDocument')">
+          Documento
+          <mat-icon>{{ getSortIcon('studentDocument') }}</mat-icon>
+        </button>
+        <button type="button" (click)="sortBy('courseName')">
+          Curso
+          <mat-icon>{{ getSortIcon('courseName') }}</mat-icon>
+        </button>
+        <button type="button" (click)="sortBy('status')">
+          Estado
+          <mat-icon>{{ getSortIcon('status') }}</mat-icon>
+        </button>
+        <span>Acciones</span>
+      </div>
+
+      @for (estudiante of paginatedStudents(); track getStudentRowId(estudiante)) {
+        <article class="student-record" [class.expanded]="isStudentExpanded(estudiante)">
+          <div class="student-row" role="button" tabindex="0" (click)="toggleStudentDetails(estudiante)" (keydown.enter)="toggleStudentDetails(estudiante)">
+            <span class="student-main">
+              <span class="student-avatar">{{ getStudentInitials(estudiante) }}</span>
+              <span>
+                <strong>{{ estudiante.studentName }}</strong>
+                <small>{{ estudiante.studentEmail || 'Sin correo registrado' }}</small>
+              </span>
+            </span>
+            <span>{{ estudiante.studentDocType }} {{ estudiante.studentDocument || 'Sin documento' }}</span>
+            <span>{{ estudiante.courseName }}</span>
+            <span class="status-cell" (click)="$event.stopPropagation()">
+              <mat-slide-toggle
+                class="status-toggle"
+                [class.inactive]="!estudiante.user.isActive"
+                [checked]="estudiante.user.isActive"
+                [disabled]="!canEditStudent(estudiante)"
+                (change)="handleToggleStatus(estudiante, $event)"
+                [attr.aria-label]="estudiante.user.isActive ? 'Inactivar estudiante' : 'Activar estudiante'">
+                {{ estudiante.user.isActive ? 'Activo' : 'Inactivo' }}
+              </mat-slide-toggle>
+            </span>
+            <span class="row-actions" (click)="$event.stopPropagation()">
+              <button mat-button type="button" (click)="toggleStudentDetails(estudiante)">
+                {{ isStudentExpanded(estudiante) ? 'Ocultar' : 'Ver mas' }}
+              </button>
+              @if (canEditStudent(estudiante)) {
+                <button mat-icon-button type="button" (click)="handleEdit(estudiante)" aria-label="Editar estudiante" title="Editar estudiante">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              }
+            </span>
+          </div>
+
+          @if (isStudentExpanded(estudiante)) {
+            <section class="student-details">
+              <div class="details-group">
+                <h3>Datos del estudiante</h3>
+                <dl>
+                  <div>
+                    <dt>ID estudiante</dt>
+                    <dd>{{ estudiante.displayId }}</dd>
+                  </div>
+                  <div>
+                    <dt>ID usuario</dt>
+                    <dd>{{ estudiante.userIdLabel }}</dd>
+                  </div>
+                  <div>
+                    <dt>Teléfono</dt>
+                    <dd>{{ estudiante.studentPhone || 'Sin teléfono' }}</dd>
+                  </div>
+                  <div>
+                    <dt>Dirección</dt>
+                    <dd>{{ estudiante.studentAddress || 'Sin dirección' }}</dd>
+                  </div>
+                </dl>
+              </div>
+
+              <div class="details-group">
+                <h3>Datos del tutor</h3>
+                <dl>
+                  <div>
+                    <dt>Tutor</dt>
+                    <dd>{{ estudiante.tutorName || 'Sin tutor' }}</dd>
+                  </div>
+                  <div>
+                    <dt>Documento</dt>
+                    <dd>{{ estudiante.tipoDocTutor }} {{ estudiante.documentoTutor || 'Sin documento' }}</dd>
+                  </div>
+                  <div>
+                    <dt>Correo</dt>
+                    <dd>{{ estudiante.emailTutor || 'Sin correo' }}</dd>
+                  </div>
+                  <div>
+                    <dt>Teléfono</dt>
+                    <dd>{{ estudiante.telefonoTutor || 'Sin teléfono' }}</dd>
+                  </div>
+                  <div>
+                    <dt>Ocupacion</dt>
+                    <dd>{{ estudiante.ocupacionTutor || 'Sin ocupacion' }}</dd>
+                  </div>
+                </dl>
+              </div>
+            </section>
+          }
+        </article>
+      } @empty {
+        <p class="empty-state">{{ getEmptyStateMessage() }}</p>
+      }
+    </div>
+
+    @if (sortedStudents().length > 0) {
+      <div class="students-paginator">
+        <label>
+          Mostrar
+          <select [value]="pageSize()" (change)="setPageSize($any($event.target).value)">
+            <option [value]="5">5</option>
+            <option [value]="10">10</option>
+            <option [value]="15">15</option>
+            <option [value]="20">20</option>
+          </select>
+        </label>
+
+        <span>
+          {{ paginationStart() }} - {{ paginationEnd() }} de {{ sortedStudents().length }}
+        </span>
+
+        <div class="pagination-actions">
+          <button mat-icon-button type="button" (click)="goToPage(currentPage() - 1)" [disabled]="currentPage() === 1" aria-label="Pagina anterior">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+          <strong>Pagina {{ currentPage() }} de {{ totalPages() }}</strong>
+          <button mat-icon-button type="button" (click)="goToPage(currentPage() + 1)" [disabled]="currentPage() === totalPages()" aria-label="Pagina siguiente">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </div>
+      </div>
+    }
+  </section>
+</div>

@@ -1,0 +1,34 @@
+﻿<h2 mat-dialog-title>{{ isEditMode ? 'Editar Modulo' : 'Nuevo Modulo' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="form-container">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombre del Modulo</mat-label>
+      <input matInput formControlName="name" placeholder="Ej. materias">
+
+      @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
+        <mat-error>El nombre es obligatorio</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Descripcion</mat-label>
+      <textarea matInput formControlName="description" placeholder="Describe brevemente el módulo"></textarea>
+
+      @if (form.get('description')?.hasError('required') && form.get('description')?.touched) {
+        <mat-error>La descripcion es obligatoria</mat-error>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="onSave()"
+    [disabled]="form.invalid">
+    {{ isEditMode ? 'Actualizar' : 'Guardar' }}
+  </button>
+</mat-dialog-actions>

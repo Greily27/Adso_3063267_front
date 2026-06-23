@@ -1,0 +1,257 @@
+﻿<section class="profile-page">
+  <header class="profile-header">
+    <div>
+      <p class="breadcrumb">Cuenta</p>
+      <h1>Mi perfil</h1>
+      <p class="subtitle">Consulta y actualiza tu informacion personal.</p>
+    </div>
+
+    <div class="profile-badge">
+      <span class="profile-photo-frame" aria-hidden="true">
+        <mat-icon>account_circle</mat-icon>
+        @if (hasProfilePhoto()) {
+          <img [src]="profilePhoto()" alt="" (error)="onProfilePhotoError($event)">
+        }
+      </span>
+      <div>
+        <span>{{ roleLabel() }}</span>
+        <strong>{{ userNameLabel() }}</strong>
+      </div>
+    </div>
+  </header>
+
+  @if (successMessage) {
+    <div class="message success">{{ successMessage }}</div>
+  }
+
+  @if (errorMessage) {
+    <div class="message error">{{ errorMessage }}</div>
+  }
+
+  <form class="profile-form" [formGroup]="form" (ngSubmit)="saveProfile()">
+    <section class="panel">
+      <div class="panel-heading">
+        <mat-icon>person</mat-icon>
+        <div>
+          <h2>Informacion del usuario</h2>
+          <p>El rol solo se muestra como referencia y no se puede modificar.</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Nombres</mat-label>
+          <input matInput formControlName="names">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Apellidos</mat-label>
+          <input matInput formControlName="lastNames">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Teléfono</mat-label>
+          <input matInput formControlName="phone">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Dirección</mat-label>
+          <input matInput formControlName="address">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Tipo documento</mat-label>
+          <mat-select formControlName="docType">
+            @for (type of documentTypes; track type.value) {
+              <mat-option [value]="type.value">{{ type.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Documento</mat-label>
+          <input matInput formControlName="document">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Correo</mat-label>
+          <input matInput formControlName="email">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Nueva contraseña</mat-label>
+          <input matInput type="password" formControlName="password">
+        </mat-form-field>
+
+        <div class="file-field">
+          <span class="file-label">Foto</span>
+          <div class="photo-preview" aria-hidden="true">
+            <mat-icon>account_circle</mat-icon>
+            @if (hasProfilePhoto()) {
+              <img [src]="profilePhoto()" alt="" (error)="onProfilePhotoError($event)">
+            }
+          </div>
+          <input type="file" accept="image/*" (change)="onPhotoSelected($event)">
+            <span class="file-help">
+              {{ hasProfilePhoto() ? 'Imagen seleccionada' : 'Opcional' }}
+            </span>
+            @if (photoError) {
+              <span class="file-error">{{ photoError }}</span>
+            }
+          </div>
+
+        <div class="readonly-field">
+          <span>Rol</span>
+          <strong>{{ roleLabel() }}</strong>
+        </div>
+      </div>
+    </section>
+
+    @if (isStudentProfile()) {
+      <section class="panel">
+        <div class="panel-heading">
+          <mat-icon>school</mat-icon>
+          <div>
+            <h2>Informacion del estudiante</h2>
+            <p>Datos complementarios del registro estudiantil.</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Tipo documento tutor</mat-label>
+            <mat-select formControlName="tipoDocTutor">
+              @for (type of documentTypes; track type.value) {
+                <mat-option [value]="type.value">{{ type.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Documento tutor</mat-label>
+            <input matInput formControlName="documentoTutor">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Email tutor</mat-label>
+            <input matInput formControlName="emailTutor">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre tutor</mat-label>
+            <input matInput formControlName="nombreTutor">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Apellido tutor</mat-label>
+            <input matInput formControlName="apellidoTutor">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Ocupacion tutor</mat-label>
+            <input matInput formControlName="ocupacionTutor">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Teléfono tutor</mat-label>
+            <input matInput formControlName="telefonoTutor">
+          </mat-form-field>
+
+          <div class="readonly-field">
+            <span>Curso</span>
+            <strong>{{ courseLabel() }}</strong>
+          </div>
+        </div>
+      </section>
+    }
+
+    @if (isDocenteProfile()) {
+      <section class="panel">
+        <div class="panel-heading">
+          <mat-icon>assignment_ind</mat-icon>
+          <div>
+            <h2>Cursos y materias asignadas</h2>
+            <p>Asignaciones donde vas a dictar clase.</p>
+          </div>
+        </div>
+
+        <div class="profile-table">
+          <div class="profile-table-header">
+            <span>Curso</span>
+            <span>Materia</span>
+          </div>
+
+          @for (asignacion of docenteAsignaciones(); track asignacion.id) {
+            <div class="profile-table-row">
+              <span>{{ asignacion.curso }}</span>
+              <span>{{ asignacion.materia }}</span>
+            </div>
+          } @empty {
+            <p class="empty-state">Aún no tienes cursos o materias asignadas.</p>
+          }
+        </div>
+      </section>
+    }
+
+    @if (isStudentProfile()) {
+      <section class="panel">
+        <div class="panel-heading">
+          <mat-icon>calendar_month</mat-icon>
+          <div>
+            <h2>Horario de {{ courseLabel() }}</h2>
+            <p>{{ studentScheduleCount() }} bloque{{ studentScheduleCount() === 1 ? '' : 's' }} registrado{{ studentScheduleCount() === 1 ? '' : 's' }}.</p>
+          </div>
+        </div>
+
+        <div class="schedule-scroll">
+          <table class="schedule-table">
+            <thead>
+              <tr>
+                <th>Hora</th>
+                @for (dia of dias; track dia.key) {
+                  <th>{{ dia.label }}</th>
+                }
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (bloque of bloques; track bloque.horaInicio) {
+                <tr [class.break-row]="isBreakBlock(bloque)">
+                  <th class="time-cell">{{ bloque.horaInicio }} - {{ bloque.horaFin }}</th>
+
+                  @if (isBreakBlock(bloque)) {
+                    <td class="break-cell" [attr.colspan]="dias.length">
+                      <strong>{{ bloque.label }}</strong>
+                    </td>
+                  } @else {
+                    @for (dia of dias; track dia.key) {
+                      <td>
+                        @if (getStudentHorario(dia.key, bloque); as horario) {
+                          <div class="schedule-card filled">
+                            <strong>{{ getHorarioMateriaName(horario) }}</strong>
+                            <small>{{ getHorarioDocenteName(horario) }}</small>
+                          </div>
+                        } @else {
+                          <div class="schedule-card empty">
+                            <span>Sin clase</span>
+                          </div>
+                        }
+                      </td>
+                    }
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
+
+    <div class="actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || isSaving">
+        <mat-icon>save</mat-icon>
+        {{ isSaving ? 'Guardando...' : 'Guardar cambios' }}
+      </button>
+    </div>
+  </form>
+</section>

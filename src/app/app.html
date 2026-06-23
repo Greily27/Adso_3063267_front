@@ -1,0 +1,12 @@
+@if (isLoading()) {
+  <section class="app-preloader" aria-live="polite" aria-label="Cargando aplicacion">
+    <div class="preloader-card">
+      <div class="preloader-mark" aria-hidden="true">
+        <span class="preloader-ring"></span>
+        <img src="/images/institucion/colplinista.png" alt="">
+      </div>
+    </div>
+  </section>
+}
+
+<router-outlet></router-outlet>

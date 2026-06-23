@@ -1,0 +1,154 @@
+﻿<div class="header">
+  <section class="auditorios-hero">
+    <div>
+      <span class="eyebrow">Espacios académicos</span>
+      <h1>Auditorios y reservas</h1>
+      <p>Administra auditorios disponibles y separa horarios evitando cruces por usuario o espacio.</p>
+    </div>
+  </section>
+
+  @if (errorMessage()) {
+    <div class="error-message">{{ errorMessage() }}</div>
+  }
+
+  <section class="auditorios-grid">
+    <section class="panel auditorios-list-panel">
+      <div class="panel-heading">
+        <div>
+          <h2>Auditorios</h2>
+          <p>{{ auditorios().length }} auditorio{{ auditorios().length === 1 ? '' : 's' }} registrado{{ auditorios().length === 1 ? '' : 's' }}</p>
+        </div>
+        <button mat-raised-button color="primary" type="button" (click)="openAuditorioDialog()">
+          <mat-icon>add</mat-icon>
+          Nuevo
+        </button>
+      </div>
+
+      <div class="simple-table">
+        <div class="table-head">
+          <span>Auditorio</span>
+          <span>Acciones</span>
+        </div>
+        @for (auditorio of auditorios(); track auditorio.idauditorio) {
+          <div class="table-row">
+            <strong>{{ auditorio.nombre }}</strong>
+            <span class="row-actions">
+              <button mat-icon-button type="button" (click)="editAuditorio(auditorio)" aria-label="Editar auditorio">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" type="button" (click)="deleteAuditorio(auditorio)" aria-label="Eliminar auditorio">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </span>
+          </div>
+        } @empty {
+          <p class="empty-state">Aún no hay auditorios registrados.</p>
+        }
+      </div>
+    </section>
+
+    <form class="panel" [formGroup]="reservaForm" (ngSubmit)="saveReserva()">
+      <div class="panel-heading">
+        <div>
+          <h2>{{ editingReservaId() ? 'Editar reserva' : 'Nueva reserva' }}</h2>
+          <p>{{ reservas().length }} reserva{{ reservas().length === 1 ? '' : 's' }} registrada{{ reservas().length === 1 ? '' : 's' }}</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Usuario</mat-label>
+          <mat-select formControlName="idusuario">
+            @for (user of users(); track user.id) {
+              <mat-option [value]="user.id">{{ getUserName(user) }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Auditorio</mat-label>
+          <mat-select formControlName="idauditorio">
+            @for (auditorio of auditorios(); track auditorio.idauditorio) {
+              <mat-option [value]="auditorio.idauditorio">{{ auditorio.nombre }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha</mat-label>
+          <input matInput type="date" formControlName="fecha">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Hora inicio</mat-label>
+          <input matInput type="time" formControlName="hora_inicio">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Hora fin</mat-label>
+          <input matInput type="time" formControlName="hora_fin">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Asignacion opcional</mat-label>
+          <mat-select formControlName="idasignacion">
+            <mat-option [value]="null">Sin asignación</mat-option>
+            @for (asignacion of asignaciones(); track asignacion.idAsignacion) {
+              <mat-option [value]="asignacion.idAsignacion">
+                {{ getAsignacionLabel(asignacion.idAsignacion) }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="actions">
+        @if (editingReservaId()) {
+          <button mat-button type="button" (click)="cancelReservaEdit()">Cancelar</button>
+        }
+        <button mat-raised-button color="primary" type="submit">
+          {{ editingReservaId() ? 'Guardar reserva' : 'Crear reserva' }}
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <section class="panel reservations-panel">
+    <div class="panel-heading">
+      <div>
+        <h2>Reservas de auditorio</h2>
+        <p>Listado ordenado por fecha y hora.</p>
+      </div>
+    </div>
+
+    <div class="reservations-table">
+      <div class="reservations-head">
+        <span>Auditorio</span>
+        <span>Usuario</span>
+        <span>Inicio</span>
+        <span>Fin</span>
+        <span>Asignacion</span>
+        <span>Acciones</span>
+      </div>
+      @for (reserva of reservasOrdenadas(); track reserva.idreserva) {
+        <div class="reservation-row">
+          <strong>{{ getAuditorioName(reserva) }}</strong>
+          <span>{{ getUserName(getReservaUser(reserva)) }}</span>
+          <span>{{ formatDate(reserva.fecha_hora) }}</span>
+          <span>{{ formatTime(reserva.fecha_hora_fin) }}</span>
+          <span>{{ getAsignacionLabel(reserva.idasignacion) }}</span>
+          <span class="row-actions">
+            <button mat-icon-button type="button" (click)="editReserva(reserva)" aria-label="Editar reserva">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" type="button" (click)="deleteReserva(reserva)" aria-label="Eliminar reserva">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </span>
+        </div>
+      } @empty {
+        <p class="empty-state">Aún no hay reservas registradas.</p>
+      }
+    </div>
+  </section>
+</div>

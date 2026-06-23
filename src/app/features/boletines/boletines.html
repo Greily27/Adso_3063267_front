@@ -1,0 +1,293 @@
+﻿<section class="boletines-page">
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">Reporte academico</span>
+      <h1>{{ getPageTitle() }}</h1>
+      <p>{{ getPageDescription() }}</p>
+    </div>
+
+    <div class="header-actions">
+      <button mat-stroked-button type="button" (click)="reloadData()">
+        <mat-icon>refresh</mat-icon>
+        Actualizar
+      </button>
+      @if (!isStudentMode()) {
+        <button mat-raised-button color="primary" type="button" [disabled]="!puedeGenerarBoletines()" (click)="generarBoletines()">
+          <mat-icon>article</mat-icon>
+          {{ getGenerateButtonText() }}
+        </button>
+        @if (boletinesGenerados()) {
+          <button mat-raised-button color="accent" type="button" [disabled]="boletines().length === 0 || isPublishing()" (click)="guardarYPublicarBoletines()">
+            <mat-icon>cloud_upload</mat-icon>
+            {{ isPublishing() ? 'Guardando...' : 'Guardar y publicar' }}
+          </button>
+        }
+      }
+    </div>
+  </div>
+
+  <div class="filters-panel">
+    @if (!isStudentMode()) {
+      <mat-form-field appearance="outline">
+        <mat-label>Curso</mat-label>
+        <mat-select [value]="selectedCursoId()" (selectionChange)="onCursoChange($event)">
+          @if (isAdminMode()) {
+            <mat-option [value]="0">Todos los cursos</mat-option>
+          }
+          @for (curso of cursosDisponibles(); track getCursoId(curso)) {
+            <mat-option [value]="getCursoId(curso)">
+              {{ getCursoOptionName(curso) }}
+            </mat-option>
+          } @empty {
+            <mat-option disabled>{{ isDocenteMode() ? 'No tienes cursos como director' : 'No hay cursos registrados' }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+
+    <mat-form-field appearance="outline">
+      <mat-label>Período académico</mat-label>
+      <mat-select [value]="selectedPeriodoId()" (selectionChange)="onPeriodoChange($event)">
+        @for (periodo of periodos(); track getPeriodoId(periodo)) {
+          <mat-option [value]="getPeriodoId(periodo)">
+            {{ periodo.nombrePeriodo }} | {{ formatDate(periodo.fechaInicial) }} - {{ formatDate(periodo.fechaFinal) }}
+          </mat-option>
+        } @empty {
+          <mat-option disabled>No hay periodos registrados</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    @if (selectedCurso() || selectedPeriodo() || currentStudent() || isAdminMode()) {
+      <div class="period-summary">
+        <span>Seleccion actual</span>
+        <strong>{{ isStudentMode() && currentStudent() ? getStudentName(currentStudent()!) : selectedCurso() ? getCursoOptionName(selectedCurso()) : 'Todos los cursos' }}</strong>
+        <small>{{ selectedPeriodo()?.nombrePeriodo || 'Sin periodo' }}</small>
+      </div>
+    }
+  </div>
+
+  @if (validationMessages().length > 0) {
+    <div class="alerts">
+      @for (message of validationMessages(); track $index) {
+        <p>{{ message }}</p>
+      }
+    </div>
+  }
+
+  @if (publishMessage()) {
+    <div class="alerts publish-status">
+      <p>{{ publishMessage() }}</p>
+    </div>
+  }
+
+  @if (isStudentMode()) {
+    <section class="students-panel">
+      <div class="students-panel-header">
+        <div>
+          <h2>Boletines publicados</h2>
+          <p>{{ misBoletinesFiltrados().length }} boletin{{ misBoletinesFiltrados().length === 1 ? '' : 'es' }} disponible{{ misBoletinesFiltrados().length === 1 ? '' : 's' }}</p>
+        </div>
+      </div>
+
+      <div class="published-list">
+        @for (boletin of misBoletinesFiltrados(); track getPublishedBoletinId(boletin, $index)) {
+          <article class="published-item">
+            <div>
+              <strong>{{ getPublishedPeriodoName(boletin) }}</strong>
+              <span>Publicado: {{ getPublishedDate(boletin) }}</span>
+              @if (boletin.promedio !== undefined) {
+                <small>Promedio: {{ boletin.promedio | number:'1.1-1' }}</small>
+              }
+            </div>
+
+            <div class="row-actions">
+              @if (getPublishedBoletinUrl(boletin)) {
+                <button mat-stroked-button type="button" (click)="abrirBoletinPublicado(boletin)">
+                  <mat-icon>visibility</mat-icon>
+                  Visualizar
+                </button>
+                <a mat-stroked-button [href]="getPublishedBoletinUrl(boletin)" download>
+                  <mat-icon>download</mat-icon>
+                  Descargar
+                </a>
+              } @else {
+                <span class="muted">Sin URL de archivo</span>
+              }
+            </div>
+          </article>
+        } @empty {
+          <p class="empty-row">Aún no tienes boletines publicados para la seleccion actual.</p>
+        }
+      </div>
+    </section>
+  }
+
+  @if (!isStudentMode()) {
+  <section class="students-panel">
+    <div class="students-panel-header">
+      <div>
+        <h2>{{ isAdminMode() && !selectedCurso() ? 'Estudiantes de todos los cursos' : isStudentMode() ? 'Mi informacion academica' : 'Estudiantes del curso' }}</h2>
+        <p>{{ estudiantesFiltrados().length }} estudiante{{ estudiantesFiltrados().length === 1 ? '' : 's' }} encontrado{{ estudiantesFiltrados().length === 1 ? '' : 's' }}</p>
+      </div>
+    </div>
+
+    <div class="students-table">
+      <div class="students-head">
+        <span>{{ isStudentMode() ? 'Estudiante' : 'Estudiante' }}</span>
+        <span>Documento</span>
+        <span>Curso</span>
+        <span>Estado</span>
+        <span>Acciones</span>
+      </div>
+
+      @for (estudiante of estudiantesFiltrados(); track getEstudianteId(estudiante)) {
+        <div class="students-row">
+          <strong>{{ getStudentName(estudiante) }}</strong>
+          <span>{{ estudiante.user.document || 'Sin documento' }}</span>
+          <span>{{ getCursoOptionName(estudiante.curso) }}</span>
+          <span>
+            @if (getBoletinPublicadoByEstudiante(estudiante)) {
+              Publicado
+            } @else if (boletinesGenerados()) {
+              Generado
+            } @else {
+              Pendiente
+            }
+          </span>
+          <div class="row-actions">
+            @if (getBoletinPublicadoByEstudiante(estudiante); as boletinPublicado) {
+              @if (getPublishedBoletinUrl(boletinPublicado)) {
+                <button mat-stroked-button type="button" (click)="abrirBoletinPublicado(boletinPublicado)">
+                  <mat-icon>visibility</mat-icon>
+                  Ver
+                </button>
+                <button mat-stroked-button type="button" (click)="descargarBoletinPublicado(boletinPublicado)">
+                  <mat-icon>download</mat-icon>
+                  Descargar
+                </button>
+              } @else {
+                <span class="muted">Publicado sin archivo</span>
+              }
+            } @else if (boletinesGenerados()) {
+              @if (getBoletinByEstudiante(estudiante); as boletin) {
+                <button mat-stroked-button type="button" (click)="verVistaPrevia(boletin)">
+                  <mat-icon>visibility</mat-icon>
+                  Vista previa
+                </button>
+                <button mat-stroked-button type="button" (click)="descargarPdf(boletin)">
+                  <mat-icon>picture_as_pdf</mat-icon>
+                  PDF
+                </button>
+              } @else {
+                <span class="muted">Sin notas</span>
+              }
+            } @else {
+              <span class="muted">Sin boletin</span>
+            }
+          </div>
+        </div>
+      } @empty {
+        <p class="empty-row">{{ isStudentMode() ? 'No encontramos tu registro de estudiante.' : isAdminMode() ? 'No hay estudiantes registrados.' : 'Selecciona un curso para ver sus estudiantes.' }}</p>
+      }
+    </div>
+  </section>
+  }
+
+  @if (previewBoletin(); as boletin) {
+    <div class="report-preview">
+      <article class="report-sheet">
+        <header class="school-header">
+          <div class="seal">
+            <img [src]="institutionLogoPath" alt="Logo institucional">
+          </div>
+          <div class="school-copy">
+            <h1>Institucion Educativa Tecnica Plinio Mendoza Neira</h1>
+            <span>Toca, Boyaca</span>
+            <strong>Sede: Central - Jornada: Manana</strong>
+            <span>Inscripcion al Dane No. 115814000011 NIT. 800091749</span>
+            <h2>INFORME DE EVALUACION ACADEMICA</h2>
+          </div>
+          <div class="year-box">
+            <span>Ano lectivo</span>
+            <strong>{{ getPeriodoYear(selectedPeriodo()) }}</strong>
+          </div>
+        </header>
+
+        <section class="student-grid">
+          <div class="student-name"><span>ESTUDIANTE:</span><strong>{{ boletin.nombre }}</strong></div>
+          <div><span>GRADO:</span><strong>{{ boletin.curso }}</strong></div>
+          <div><span>CURSO:</span><strong>{{ boletin.curso }}</strong></div>
+          <div class="student-name"><span>DOCUMENTO:</span><strong>{{ boletin.documento }}</strong></div>
+          <div><span>PERIODO:</span><strong>{{ getPeriodoName(selectedPeriodo()) }}</strong></div>
+          <div><span>PROMEDIO:</span><strong>{{ boletin.promedioLabel }}</strong></div>
+        </section>
+
+        <section class="academic-report">
+          @for (materia of boletin.materias; track materia.key) {
+            <table class="subject-table">
+              <colgroup>
+                <col class="subject-col">
+                <col class="ihs-col">
+                <col class="valuation-col">
+                <col class="fault-col">
+                <col class="fault-col">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th colspan="5">{{ materia.nombre | uppercase }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="subject-summary-row">
+                  <td>
+                    <strong>{{ materia.nombre }}</strong>
+                    <small>Prof: {{ materia.docente }}</small>
+                  </td>
+                  <td>
+                    <strong>IHS</strong>
+                    <span>{{ materia.ihs }}</span>
+                  </td>
+                  <td>
+                    <strong>{{ getValoracionPeriodo(materia) }}</strong>
+                    <span>1P: {{ materia.promedioLabel }}</span>
+                  </td>
+                  <td>
+                    <strong>FJ: {{ boletin.fallasJustificadas }}</strong>
+                    <span>NA: {{ materia.promedioLabel }}</span>
+                  </td>
+                  <td>
+                    <strong>FNJ: {{ boletin.fallasNoJustificadas }}</strong>
+                    <span>1P:FJ: {{ boletin.fallasJustificadas }}</span>
+                  </td>
+                </tr>
+                @for (nota of materia.notas; track getNotaTrackKey(nota, $index)) {
+                  <tr class="performance-row">
+                    <td colspan="5">
+                      <strong>{{ nota.valor | number:'1.1-1' }}</strong>
+                      <span>- {{ getNotaDescripcion(nota) }}</span>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+        </section>
+
+        <footer class="final-summary">
+          <span>Resultado: <strong>{{ boletin.resultado }}</strong></span>
+          <span>Promedio final: <strong>{{ boletin.promedioLabel }}</strong></span>
+        </footer>
+
+        <section class="observations report-observations">
+          <h3>Observaciones del periodo</h3>
+          @for (observacion of boletin.observaciones; track getObservacionTrackKey(observacion, $index)) {
+            <p><strong>{{ formatDate(observacion.fecha) }}:</strong> {{ observacion.categoria }} - {{ observacion.descripcion }}</p>
+          } @empty {
+            <p>Sin observaciones registradas para este periodo.</p>
+          }
+        </section>
+      </article>
+    </div>
+  }
+</section>

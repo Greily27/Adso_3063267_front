@@ -1,0 +1,52 @@
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: min(520px, 82vw);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.file-picker {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border: 1px dashed var(--app-line, #93a79c);
+  border-radius: 8px;
+  background: var(--app-soft, #f4faf6);
+  color: var(--app-nav-text, #18372b);
+  font-weight: 700;
+}
+
+.file-picker input {
+  max-width: 100%;
+}
+
+.file-picker strong {
+  color: var(--app-green-700, #146b50);
+  word-break: break-word;
+}
+
+.form-hint {
+  margin: -4px 0 6px;
+  color: var(--app-muted, #60756b);
+  font-size: 0.9rem;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .form-container {
+    min-width: 0;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}

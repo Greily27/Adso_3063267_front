@@ -1,0 +1,20 @@
+﻿<h2 mat-dialog-title>{{ data ? 'Editar auditorio' : 'Nuevo auditorio' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="nombre" placeholder="Auditorio principal" autocomplete="off">
+      @if (form.controls.nombre.touched && form.controls.nombre.invalid) {
+        <mat-error>Ingresa un nombre válido.</mat-error>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" mat-dialog-close>Cancelar</button>
+  <button mat-raised-button color="primary" type="button" (click)="save()">
+    {{ data ? 'Guardar cambios' : 'Crear auditorio' }}
+  </button>
+</mat-dialog-actions>

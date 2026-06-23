@@ -1,0 +1,114 @@
+.form-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  min-width: 620px;
+}
+
+.form-container.edit-mode {
+  grid-template-columns: 1fr;
+  width: min(420px, calc(100vw - 48px));
+  min-width: 0;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.grades-panel {
+  grid-column: 1 / -1;
+  border: 1px solid #d7dde5;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.hint,
+.empty-state {
+  margin: 0;
+  padding: 10px 12px;
+  color: #5d6778;
+  background: #f7f9fc;
+}
+
+.grades-table {
+  display: grid;
+  width: 100%;
+}
+
+.grades-header,
+.grades-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.4fr) 100px minmax(160px, 1fr);
+  align-items: center;
+}
+
+.grades-header {
+  background: #eef2f7;
+  color: #273244;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.grades-header span,
+.grades-row > * {
+  padding: 8px 10px;
+  border-bottom: 1px solid #e5e9f0;
+}
+
+.grades-row:last-child > * {
+  border-bottom: 0;
+}
+
+.student-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.grade-input,
+.description-input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  font: inherit;
+  outline: none;
+}
+
+.grade-input {
+  text-align: center;
+}
+
+.grade-input:focus,
+.description-input:focus {
+  border-color: #3f51b5;
+  background: #fff;
+}
+
+.grade-input:disabled,
+.description-input:disabled {
+  color: #8a93a3;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .form-container {
+    grid-template-columns: 1fr;
+    min-width: 0;
+  }
+
+  .grades-header,
+  .grades-row {
+    grid-template-columns: minmax(130px, 1fr) 80px minmax(110px, 1fr);
+  }
+}

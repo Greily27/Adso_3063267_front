@@ -1,0 +1,13 @@
+:host {
+  display: block;
+  color: var(--app-ink);
+}
+
+mat-dialog-content {
+  min-width: min(420px, 78vw);
+  padding-top: 8px;
+}
+
+mat-form-field {
+  width: 100%;
+}

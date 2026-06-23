@@ -1,0 +1,17 @@
+﻿<div class="header">
+  <h1>Gestión de Módulos</h1>
+  <button mat-raised-button color="primary" (click)="openDialog()">
+    Nuevo Modulo
+  </button>
+
+  @if (errorMessage) {
+    <div class="error-message">{{ errorMessage }}</div>
+  }
+
+  <app-custom-table
+    [data]="modules()"
+    [columns]="columns"
+    (edit)="handleEdit($event)"
+    (delete)="handleDelete($event)">
+  </app-custom-table>
+</div>

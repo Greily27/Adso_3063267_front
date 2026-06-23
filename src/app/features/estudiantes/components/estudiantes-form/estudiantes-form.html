@@ -1,0 +1,141 @@
+﻿<h2 mat-dialog-title>{{ isEditMode ? 'Editar Estudiante' : 'Nuevo Estudiante' }}</h2>
+
+<form [formGroup]="form">
+  <mat-dialog-content class="form-container">
+    <mat-form-field appearance="outline">
+      <mat-label>Tipo documento tutor</mat-label>
+      <mat-select formControlName="tipoDocTutor">
+        @for (type of documentTypes; track type.value) {
+          <mat-option [value]="type.value">{{ type.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Documento tutor</mat-label>
+      <input matInput formControlName="documentoTutor">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Email tutor</mat-label>
+      <input matInput formControlName="emailTutor">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre tutor</mat-label>
+      <input matInput formControlName="nombreTutor">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Apellido tutor</mat-label>
+      <input matInput formControlName="apellidoTutor">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Ocupacion tutor</mat-label>
+      <input matInput formControlName="ocupacionTutor">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Teléfono tutor</mat-label>
+      <input matInput formControlName="telefonoTutor">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Usuario</mat-label>
+      <mat-select formControlName="user" [compareWith]="compareById">
+        @for (user of usuariosFiltrados(); track user.id) {
+          <mat-option [value]="user">
+            {{ user.names }} {{ user.lastNames }} - {{ user.document }}
+          </mat-option>
+        } @empty {
+          <mat-option disabled>No hay usuarios disponibles</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Nombres estudiante</mat-label>
+      <input matInput formControlName="names">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Apellidos estudiante</mat-label>
+      <input matInput formControlName="lastNames">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Teléfono estudiante</mat-label>
+      <input matInput formControlName="phone">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Dirección estudiante</mat-label>
+      <input matInput formControlName="address">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Tipo documento estudiante</mat-label>
+      <mat-select formControlName="docType">
+        @for (type of documentTypes; track type.value) {
+          <mat-option [value]="type.value">{{ type.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Documento estudiante</mat-label>
+      <input matInput formControlName="document">
+    </mat-form-field>
+
+    <div class="file-field">
+      <span class="file-label">Foto estudiante</span>
+      <input
+        type="file"
+        accept="image/*"
+        (change)="onPhotoSelected($event)">
+      <span class="file-help">
+        {{ form.get('photo')?.value ? 'Imagen seleccionada' : 'Opcional' }}
+      </span>
+      @if (photoError) {
+        <span class="file-error">{{ photoError }}</span>
+      }
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Correo estudiante</mat-label>
+      <input matInput formControlName="email">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Estado usuario</mat-label>
+      <mat-select formControlName="isActive">
+        <mat-option [value]="true">Activo</mat-option>
+        <mat-option [value]="false">Inactivo</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{ isEditMode ? 'Nueva contraseña usuario' : 'Contraseña usuario' }}</mat-label>
+      <input matInput type="password" formControlName="password">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Curso</mat-label>
+      <mat-select formControlName="cursoId" [compareWith]="compareById">
+        @for (curso of cursos(); track curso.id) {
+          <mat-option [value]="curso">{{ getCursoName(curso) }}</mat-option>
+        } @empty {
+          <mat-option disabled>No hay cursos disponibles</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+    <button mat-raised-button color="primary" type="button" (click)="onSave()" [disabled]="form.invalid">
+      {{ isEditMode ? 'Actualizar' : 'Guardar' }}
+    </button>
+  </mat-dialog-actions>
+</form>

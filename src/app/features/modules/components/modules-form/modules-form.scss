@@ -1,0 +1,22 @@
+// :host {
+//   display: block;
+// }
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; // Un poco más de espacio entre campos
+  padding: 20px 8px 10px 8px; // Padding superior vital para los labels
+  width: 100%;
+  box-sizing: border-box;
+}
+
+// .full-width {
+//   width: 100%;
+// }
+
+// Estilizando el scroll y el contenido del diálogo
+// mat-dialog-content {
+//   max-height: 65vh;
+//   margin-bottom: 10px;
+// }

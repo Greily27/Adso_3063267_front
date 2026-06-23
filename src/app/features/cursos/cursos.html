@@ -1,0 +1,173 @@
+﻿<div class="header">
+  <div class="page-heading">
+    <h1>Gestión de Cursos</h1>
+    @if (!isDocente()) {
+      <button mat-raised-button color="primary" (click)="openDialog()">
+        Nuevo Curso
+      </button>
+    }
+  </div>
+
+  @if (isDocente()) {
+    <div class="teacher-dashboard">
+      <div class="teacher-welcome">
+        <div>
+          <h2>Bienvenido, Docente</h2>
+          <p>Consulta tu curso asignado y los cursos donde dictas materias.</p>
+        </div>
+        <span class="teacher-badge">
+          <span class="material-icons">person</span>
+          Docente
+        </span>
+      </div>
+
+      <div class="assigned-grid">
+        @for (curso of cursosAsignados(); track getCursoId(curso)) {
+          <article class="assigned-course">
+            <div class="course-icon primary">
+              <span class="material-icons">assignment</span>
+            </div>
+            <div>
+              <span class="section-label">Curso asignado</span>
+              <h3>{{ getCursoName(curso) }}</h3>
+              <p>{{ getStudentsForCurso(curso).length }} estudiantes</p>
+            </div>
+            <button mat-stroked-button color="primary" (click)="toggleCurso(curso)">
+              {{ expandedCursoId === getCursoId(curso) ? 'Ocultar estudiantes' : 'Ver estudiantes' }}
+            </button>
+          </article>
+
+          @if (expandedCursoId === getCursoId(curso)) {
+            <div class="teacher-students-panel">
+              @for (estudiante of getStudentsForCurso(curso); track estudiante.id) {
+                <span>{{ getStudentName(estudiante) }}</span>
+              } @empty {
+                <p>No hay estudiantes asignados.</p>
+              }
+            </div>
+          }
+        } @empty {
+          <div class="empty-state">No tienes un curso asignado.</div>
+        }
+      </div>
+
+      <section class="teaching-section">
+        <div class="section-title">
+          <span class="material-icons">local_library</span>
+          <h2>Cursos en los que dicta</h2>
+        </div>
+
+        <div class="teaching-list">
+          @for (item of cursosDondeDicta(); track getCursoId(item.curso)) {
+            <article class="teaching-row">
+              <div class="course-icon accent">
+                <span class="material-icons">menu_book</span>
+              </div>
+              <div class="teaching-course-copy">
+                <strong>{{ getCursoName(item.curso) }}</strong>
+                <span>{{ getMateriasDictadasLabel(item.materias) }}</span>
+              </div>
+              <span>{{ getStudentsForCurso(item.curso).length }} estudiantes</span>
+              <button mat-stroked-button color="primary" (click)="toggleCurso(item.curso)">
+                {{ expandedCursoId === getCursoId(item.curso) ? 'Ocultar' : 'Ver estudiantes' }}
+              </button>
+            </article>
+
+            @if (expandedCursoId === getCursoId(item.curso)) {
+              <div class="teacher-students-panel compact">
+                @for (estudiante of getStudentsForCurso(item.curso); track estudiante.id) {
+                  <span>{{ getStudentName(estudiante) }}</span>
+                } @empty {
+                  <p>No hay estudiantes asignados.</p>
+                }
+              </div>
+            }
+          } @empty {
+            <div class="empty-state">No tienes cursos con materias asignadas.</div>
+          }
+        </div>
+      </section>
+    </div>
+  } @else {
+    <div class="courses-table">
+      <div class="courses-header">
+        <span>Curso</span>
+        <span>Estado</span>
+        <span>Director de curso</span>
+        <span>Docentes</span>
+        <span>Estudiantes</span>
+        <span>Materias</span>
+        <span>Acciones</span>
+      </div>
+
+      @for (curso of cursosForTable(); track curso.id) {
+        <div class="course-row" (click)="toggleCurso(curso)">
+          <div class="course-name">
+            <span class="material-icons expand-icon">
+              {{ expandedCursoId === curso.id ? 'expand_more' : 'chevron_right' }}
+            </span>
+            <strong>{{ curso.nombreCurso }}</strong>
+          </div>
+          <span>{{ curso.status }}</span>
+          <span>{{ curso.directorName }}</span>
+          <span>{{ curso.docenteCount }} docentes</span>
+          <span>{{ curso.studentCount }} estudiantes</span>
+          <span>{{ curso.materiaCount }} materias</span>
+          <div class="actions" (click)="$event.stopPropagation()">
+            <button mat-icon-button color="primary" (click)="handleEdit(curso)" title="Editar curso">
+              <span class="material-icons">edit</span>
+            </button>
+            <button mat-icon-button color="warn" (click)="handleDelete(curso)" title="Eliminar curso">
+              <span class="material-icons">delete</span>
+            </button>
+          </div>
+        </div>
+
+        @if (expandedCursoId === curso.id) {
+          <div class="students-panel">
+            <div class="students-toolbar">
+              <h2>Estudiantes del curso</h2>
+              <mat-form-field appearance="outline">
+                <mat-label>Buscar estudiante</mat-label>
+                <input
+                  matInput
+                  [value]="studentSearchTerms[curso.id!] || ''"
+                  (input)="setStudentSearch(curso.id!, $any($event.target).value)">
+              </mat-form-field>
+            </div>
+
+            <div class="students-table">
+              <div class="students-header">
+                <span>Estudiante</span>
+                <span>Documento</span>
+                <span>Tutor</span>
+                <span>Teléfono Tutor</span>
+                <span>Acciones</span>
+              </div>
+
+              @for (estudiante of getStudentsForCurso(curso); track estudiante.id) {
+                <div class="student-row">
+                  <span>{{ getStudentName(estudiante) }}</span>
+                  <span>{{ estudiante.user.document || 'Sin documento' }}</span>
+                  <span>{{ getTutorName(estudiante) }}</span>
+                  <span>{{ estudiante.telefonoTutor }}</span>
+                  <button mat-icon-button color="primary" (click)="handleEditStudent(estudiante, $event)" title="Editar estudiante">
+                    <span class="material-icons">edit</span>
+                  </button>
+                </div>
+              } @empty {
+                <div class="empty-state">
+                  No hay estudiantes que coincidan con la busqueda.
+                </div>
+              }
+            </div>
+          </div>
+        }
+      } @empty {
+        <div class="empty-state">
+          No hay cursos registrados.
+        </div>
+      }
+    </div>
+  }
+</div>

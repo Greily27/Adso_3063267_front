@@ -1,0 +1,123 @@
+.app-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(223, 243, 233, 0.18), transparent 34%),
+    linear-gradient(180deg, #0b3b2e 0%, #06281f 100%);
+  color: #ffffff;
+  animation: preloader-fade-in 220ms ease-out both;
+}
+
+.preloader-card {
+  display: grid;
+  justify-items: center;
+  width: min(300px, 100%);
+  padding: 26px;
+  border-radius: 8px;
+  background: transparent;
+}
+
+.preloader-mark {
+  position: relative;
+  display: grid;
+  width: 230px;
+  height: 230px;
+  place-items: center;
+
+  img {
+    position: relative;
+    z-index: 2;
+    width: 145px;
+    height: 145px;
+    object-fit: contain;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    animation: preloader-flip 1.45s ease-in-out infinite;
+    transform-style: preserve-3d;
+  }
+
+  &::before,
+  &::after {
+    position: absolute;
+    inset: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 50%;
+    content: '';
+  }
+
+  &::after {
+    inset: 0;
+    border-color: rgba(255, 255, 255, 0.11);
+    animation: preloader-pulse 2.4s ease-out infinite;
+  }
+}
+
+.preloader-ring {
+  position: absolute;
+  inset: 10px;
+  z-index: 1;
+  border: 5px solid rgba(255, 255, 255, 0.16);
+  border-top-color: #ffffff;
+  border-right-color: #dff3e9;
+  border-bottom-color: rgba(180, 35, 47, 0.65);
+  border-radius: 50%;
+  animation: preloader-spin 2.8s linear infinite;
+}
+
+:host-context(body.app-dark-theme) .app-preloader {
+  background:
+    radial-gradient(circle at 50% 42%, rgba(24, 168, 98, 0.18), transparent 34%),
+    linear-gradient(180deg, #0b3b2e 0%, #000000 100%);
+}
+
+@keyframes preloader-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes preloader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes preloader-flip {
+  0%,
+  100% {
+    transform: rotateY(0deg);
+  }
+
+  50% {
+    transform: rotateY(180deg);
+  }
+}
+
+@keyframes preloader-pulse {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.8);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.22);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preloader-ring,
+  .preloader-mark img,
+  .preloader-mark::after {
+    animation-duration: 2.5s;
+  }
+}

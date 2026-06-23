@@ -1,0 +1,322 @@
+:host {
+    --green: #0f6b3e;
+    --green-dark: #064225;
+    --text: #111827;
+    --muted: #4b5563;
+    --line: #d8dde6;
+
+    display: block;
+}
+
+.login-card-container {
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: minmax(420px, 48vw) 1fr;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    background: #ffffff;
+}
+
+.brand-panel {
+    position: relative;
+    min-height: 100dvh;
+    background: var(--green-dark);
+    isolation: isolate;
+}
+
+.campus-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center bottom;
+    opacity: 0.56;
+}
+
+.brand-panel::before {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    content: "";
+    background:
+        linear-gradient(180deg, rgba(15, 107, 62, 0.68) 0%, rgba(6, 66, 37, 0.58) 42%, rgba(3, 37, 20, 0.62) 100%),
+        rgba(15, 107, 62, 0.22);
+}
+
+.brand-panel::after {
+    position: absolute;
+    top: -7vh;
+    right: -96px;
+    z-index: 3;
+    width: 178px;
+    height: 114vh;
+    content: "";
+    background: #ffffff;
+    box-shadow: -20px 0 0 rgba(255, 255, 255, 0.78);
+    transform: skewX(-10deg);
+}
+
+.brand-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    gap: 26px;
+    align-items: center;
+    padding: clamp(72px, 11vh, 128px) clamp(38px, 5vw, 78px);
+    color: #ffffff;
+}
+
+.brand-logo {
+    width: clamp(108px, 10vw, 150px);
+    height: clamp(108px, 10vw, 150px);
+    object-fit: contain;
+}
+
+.brand-kicker {
+    max-width: 270px;
+    margin: 0 0 22px;
+    font-size: clamp(1.65rem, 3vw, 2.65rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.brand-content h1,
+.card-footer p {
+    margin: 0;
+}
+
+.brand-content h1 {
+    max-width: 250px;
+    padding-top: 22px;
+    border-top: 2px solid rgba(255, 255, 255, 0.8);
+    font-size: clamp(1rem, 1.5vw, 1.26rem);
+    font-weight: 400;
+    line-height: 1.45;
+}
+
+.login-panel {
+    box-sizing: border-box;
+    display: grid;
+    place-items: center;
+    min-height: 100dvh;
+    padding: 46px clamp(42px, 8vw, 118px);
+}
+
+.modern-card {
+    box-sizing: border-box;
+    width: min(100%, 520px);
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.user-badge {
+    display: grid;
+    place-items: center;
+    width: 118px;
+    height: 118px;
+    margin: 0 auto 24px;
+    color: var(--green);
+    background: #edf8f1;
+    border-radius: 50%;
+}
+
+.user-badge mat-icon {
+    width: 62px;
+    height: 62px;
+    font-size: 62px;
+}
+
+.header-content {
+    width: 100%;
+    margin-bottom: 42px;
+    text-align: center;
+}
+
+mat-card-title {
+    color: var(--text);
+    font-size: clamp(2.35rem, 4vw, 3rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: 0;
+}
+
+mat-card-subtitle {
+    color: var(--muted);
+    font-size: 1.08rem;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+:host ::ng-deep .mat-mdc-form-field {
+    --mat-form-field-container-height: 58px;
+}
+
+:host ::ng-deep .mat-mdc-text-field-wrapper {
+    background: #ffffff;
+    border-radius: 9px;
+}
+
+:host ::ng-deep .mdc-notched-outline__leading,
+:host ::ng-deep .mdc-notched-outline__notch,
+:host ::ng-deep .mdc-notched-outline__trailing {
+    border-color: var(--line) !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field-icon-prefix,
+:host ::ng-deep .mat-mdc-form-field-icon-suffix {
+    color: #6b7280;
+}
+
+.form-options {
+    display: flex;
+    justify-content: flex-end;
+    margin: -8px 0 12px;
+}
+
+.forgot-password,
+.card-footer a {
+    color: var(--green);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.login-button {
+    width: 100%;
+    height: 58px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.login-button {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, var(--green), var(--green-dark)) !important;
+}
+
+.card-footer {
+    padding: 28px 0 0;
+    color: #4b5563;
+    text-align: center;
+}
+
+@media (max-width: 900px) {
+    .login-card-container {
+        grid-template-columns: 1fr;
+        min-height: 100dvh;
+    }
+
+    .brand-panel {
+        min-height: 240px;
+    }
+
+    .brand-panel::after {
+        display: none;
+    }
+
+    .brand-content {
+        min-height: 240px;
+        box-sizing: border-box;
+        padding: 32px 26px;
+    }
+
+    .login-panel {
+        min-height: auto;
+        padding: 32px 22px 44px;
+    }
+
+    .header-content {
+        margin-bottom: 30px;
+    }
+}
+
+@media (max-width: 560px) {
+    .brand-content {
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+    .brand-logo {
+        width: 76px;
+        height: 76px;
+    }
+
+    .brand-kicker {
+        max-width: 100%;
+        margin-bottom: 14px;
+        font-size: 1.55rem;
+    }
+
+    .brand-content h1 {
+        max-width: 100%;
+        padding-top: 14px;
+        font-size: 0.98rem;
+    }
+
+    .user-badge {
+        width: 78px;
+        height: 78px;
+        margin-bottom: 18px;
+    }
+
+    .user-badge mat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 40px;
+    }
+
+    mat-card-title {
+        font-size: 2rem;
+    }
+
+    mat-card-subtitle {
+        font-size: 0.98rem;
+    }
+
+    .login-form {
+        gap: 10px;
+    }
+
+    .form-options {
+        justify-content: flex-start;
+        margin: -4px 0 10px;
+    }
+
+    .login-button {
+        height: 52px;
+    }
+
+    .card-footer {
+        padding-top: 22px;
+    }
+}
+
+@media (max-width: 380px) {
+    .brand-content {
+        flex-direction: column;
+        justify-content: center;
+        min-height: 220px;
+        padding: 24px 20px;
+    }
+
+    .brand-panel {
+        min-height: 220px;
+    }
+
+    .login-panel {
+        padding: 26px 16px 36px;
+    }
+}

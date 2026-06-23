@@ -1,0 +1,25 @@
+<h2 mat-dialog-title>Cambiar curso del estudiante</h2>
+
+<form [formGroup]="form">
+  <mat-dialog-content class="form-container">
+    <p class="student-name">{{ data.user.names }} {{ data.user.lastNames }}</p>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Curso</mat-label>
+      <mat-select formControlName="curso" [compareWith]="compareById">
+        @for (curso of cursos(); track curso.id) {
+          <mat-option [value]="curso">{{ getCursoName(curso) }}</mat-option>
+        } @empty {
+          <mat-option disabled>No hay cursos disponibles</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+    <button mat-raised-button color="primary" type="button" (click)="onSave()" [disabled]="form.invalid">
+      Actualizar curso
+    </button>
+  </mat-dialog-actions>
+</form>

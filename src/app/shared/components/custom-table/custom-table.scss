@@ -1,0 +1,180 @@
+:host {
+  display: block;
+  --table-ink: var(--app-ink);
+  --table-muted: var(--app-muted);
+  --table-line: var(--app-line);
+  --table-head: var(--app-soft);
+  --table-row: var(--app-surface);
+  --table-row-alt: var(--app-soft);
+  --table-hover: var(--app-green-100);
+  --table-green: var(--app-green-700);
+  --table-red: var(--app-red-700);
+  --table-shadow: rgba(6, 40, 31, 0.08);
+}
+
+:host-context(body.app-dark-theme) {
+  --table-shadow: rgba(0, 0, 0, 0.28);
+}
+
+.mat-elevation-z8 {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--table-line);
+  border-radius: 8px;
+  background: var(--table-row);
+  box-shadow: 0 16px 34px var(--table-shadow);
+}
+
+table {
+  width: 100%;
+  min-width: 980px;
+  background: transparent;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+th.mat-mdc-header-cell {
+  height: 48px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--table-line);
+  color: var(--table-ink);
+  background: var(--table-head);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+td.mat-mdc-cell {
+  max-width: 210px;
+  height: 52px;
+  padding: 0 14px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--table-line);
+  color: var(--table-ink);
+  font-size: 0.92rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+tr.mat-mdc-row:nth-child(even) td.mat-mdc-cell {
+  background: var(--table-row-alt);
+}
+
+tr.mat-mdc-row:nth-child(odd) td.mat-mdc-cell {
+  background: var(--table-row);
+}
+
+tr.mat-mdc-row:hover td.mat-mdc-cell {
+  background: var(--table-hover);
+}
+
+tr.mat-mdc-row:last-child td.mat-mdc-cell {
+  border-bottom: 0;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.action-buttons button {
+  width: 36px;
+  height: 36px;
+  border: 1px solid transparent;
+  background: var(--table-row);
+}
+
+.action-buttons button[color='primary'] {
+  color: var(--table-green);
+  border-color: rgba(15, 107, 62, 0.22);
+}
+
+.action-buttons button[color='warn'] {
+  color: var(--table-red);
+  border-color: rgba(180, 35, 47, 0.22);
+}
+
+.action-buttons button:hover {
+  background: var(--table-hover);
+}
+
+.mat-column-actions {
+  width: 108px;
+  min-width: 108px;
+  max-width: 108px;
+  text-align: center;
+}
+
+.mat-column-id {
+  width: 72px;
+  min-width: 72px;
+}
+
+.mat-column-userId {
+  width: 92px;
+  min-width: 92px;
+}
+
+.mat-column-promedio,
+.mat-column-valorDisplay {
+  width: 104px;
+  min-width: 104px;
+  color: var(--table-green);
+  font-weight: 800;
+  text-align: center;
+}
+
+.mat-column-studentName,
+.mat-column-tutorName,
+.mat-column-names,
+.mat-column-lastNames,
+.mat-column-nombreCurso,
+.mat-column-nombreMateria {
+  min-width: 190px;
+}
+
+.mat-column-studentEmail,
+.mat-column-emailTutor,
+.mat-column-email {
+  min-width: 230px;
+}
+
+.mat-column-studentAddress,
+.mat-column-descripcion,
+.mat-column-description,
+.mat-column-descripcionText {
+  min-width: 260px;
+}
+
+.mat-column-documentoTutor,
+.mat-column-studentDocument,
+.mat-column-telefonoTutor,
+.mat-column-studentPhone,
+.mat-column-document,
+.mat-column-phone {
+  min-width: 140px;
+}
+
+mat-paginator {
+  min-width: 980px;
+  border-top: 1px solid var(--table-line);
+  background: var(--table-row);
+  color: var(--table-muted);
+}
+
+@media (max-width: 760px) {
+  table,
+  mat-paginator {
+    min-width: 760px;
+  }
+
+  th.mat-mdc-header-cell,
+  td.mat-mdc-cell {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+}

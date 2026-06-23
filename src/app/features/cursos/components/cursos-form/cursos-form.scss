@@ -1,0 +1,76 @@
+.form-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.steps {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.steps span {
+  border-bottom: 2px solid transparent;
+  color: #5f6368;
+  font-weight: 600;
+  padding: 6px 0;
+}
+
+.steps .active {
+  border-color: #3f51b5;
+  color: #1f2937;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.assignment-step {
+  display: grid;
+  gap: 14px;
+}
+
+.assignment-form {
+  align-items: start;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr 1fr auto;
+}
+
+.assignments-list {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.assignment-row {
+  align-items: center;
+  border-bottom: 1px solid #eeeeee;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr 1fr;
+  padding: 10px 12px;
+}
+
+.assignment-row:last-child {
+  border-bottom: 0;
+}
+
+.empty-state {
+  color: #6b7280;
+  padding: 14px;
+  text-align: center;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .form-container,
+  .assignment-form,
+  .assignment-row {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,467 @@
+.header {
+  --n-ink: var(--app-ink);
+  --n-muted: var(--app-muted);
+  --n-surface: var(--app-surface);
+  --n-soft: var(--app-soft);
+  --n-line: var(--app-line);
+  --n-hover: var(--app-green-100);
+  --n-accent: var(--app-green-700);
+  --n-strong: var(--app-green-900);
+  --n-score: #1d4ed8;
+  --n-danger: var(--app-red-700);
+  --n-danger-bg: var(--app-red-100);
+  --n-shadow: rgba(6, 40, 31, 0.08);
+  --n-input-bg: #ffffff;
+  --n-dashed: #cfd7e6;
+}
+
+:host-context(body.app-dark-theme) .header {
+  --n-score: #63a7ff;
+  --n-shadow: rgba(0, 0, 0, 0.32);
+  --n-input-bg: #0b1b13;
+  --n-dashed: #2f6d4d;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 16px;
+}
+
+.header h1 {
+  margin: 0;
+  color: var(--n-ink);
+}
+
+.header button {
+  align-self: flex-start;
+}
+
+.error-message {
+  border: 1px solid var(--n-danger);
+  border-radius: 6px;
+  background: var(--n-danger-bg);
+  color: var(--n-danger);
+  padding: 10px 12px;
+}
+
+.notes-panel {
+  display: grid;
+  gap: 14px;
+  width: 100%;
+  border: 1px solid var(--n-line);
+  border-radius: 8px;
+  padding: 16px;
+  background: var(--n-surface);
+  color: var(--n-ink);
+}
+
+.filters-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(240px, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+
+.grades-panel {
+  width: 100%;
+  border: 1px solid var(--n-line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--n-surface);
+}
+
+.selected-materia {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--n-line);
+  border-radius: 8px;
+  padding: 8px 12px;
+  background: var(--n-soft);
+  color: var(--n-ink);
+  font-weight: 600;
+}
+
+.hint,
+.empty-state {
+  margin: 0;
+  padding: 10px 12px;
+  color: var(--n-muted);
+  background: var(--n-soft);
+}
+
+.grades-table {
+  display: grid;
+  width: 100%;
+}
+
+.grades-header,
+.grades-row {
+  display: grid;
+  grid-template-columns: minmax(260px, 1.5fr) 140px minmax(260px, 1.2fr);
+  align-items: center;
+}
+
+.grades-header {
+  background: var(--n-soft);
+  color: var(--n-ink);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.grades-header span,
+.grades-row > * {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--n-line);
+}
+
+.grades-row {
+  background: var(--n-surface);
+  color: var(--n-ink);
+}
+
+.grades-row:last-child > * {
+  border-bottom: 0;
+}
+
+.student-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.grade-input,
+.description-input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--n-ink);
+  font: inherit;
+  outline: none;
+}
+
+.grade-input::placeholder,
+.description-input::placeholder {
+  color: var(--n-muted);
+}
+
+.grade-input {
+  text-align: center;
+}
+
+.grade-input:focus,
+.description-input:focus {
+  border-color: var(--n-accent);
+  background: var(--n-input-bg);
+}
+
+.grade-input[readonly],
+.description-input[readonly] {
+  color: var(--n-muted);
+  cursor: not-allowed;
+}
+
+.panel-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.notes-groups {
+  display: grid;
+  gap: 18px;
+  width: 100%;
+}
+
+.notes-group {
+  display: grid;
+  gap: 0;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--n-line);
+  border-radius: 8px;
+  background: var(--n-surface);
+  color: var(--n-ink);
+  box-shadow: 0 8px 20px var(--n-shadow);
+}
+
+.notes-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--n-line);
+  background: var(--n-soft);
+}
+
+.group-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.notes-group-header h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--n-ink);
+}
+
+.group-eyebrow {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--n-muted);
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.group-teacher {
+  margin: 4px 0 0;
+  color: var(--n-muted);
+  font-size: 0.88rem;
+}
+
+.group-count {
+  flex: 0 0 auto;
+  border: 1px solid var(--n-line);
+  border-radius: 999px;
+  padding: 4px 10px;
+  background: var(--n-hover);
+  color: var(--n-strong);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+app-custom-table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
+
+:host ::ng-deep app-custom-table.notes-table .mat-elevation-z8 {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+:host ::ng-deep app-custom-table.notes-table table,
+:host ::ng-deep app-custom-table.notes-table mat-paginator {
+  min-width: 0;
+}
+
+:host ::ng-deep app-custom-table.notes-table th.mat-mdc-header-cell,
+:host ::ng-deep app-custom-table.notes-table td.mat-mdc-cell {
+  max-width: none;
+  padding: 10px 14px;
+}
+
+:host ::ng-deep app-custom-table.notes-table .mat-column-studentName {
+  min-width: 190px;
+}
+
+:host ::ng-deep app-custom-table.notes-table .mat-column-valorDisplay {
+  width: 90px;
+  min-width: 90px;
+  color: var(--n-score);
+  font-weight: 800;
+  text-align: center;
+}
+
+:host ::ng-deep app-custom-table.notes-table .mat-column-descripcionText {
+  min-width: 220px;
+  color: var(--n-muted);
+}
+
+.students-table {
+  display: grid;
+  width: 100%;
+}
+
+.admin-average-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr));
+  gap: 18px;
+  width: 100%;
+  align-items: start;
+}
+
+.average-table {
+  display: grid;
+  width: 100%;
+}
+
+.average-header,
+.average-row {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) 110px 120px;
+  align-items: center;
+}
+
+.average-header {
+  background: var(--n-soft);
+  color: var(--n-ink);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.average-header span,
+.average-row > * {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--n-line);
+}
+
+.average-row {
+  background: var(--n-surface);
+  color: var(--n-ink);
+}
+
+.average-row strong {
+  color: var(--n-score);
+  font-size: 1rem;
+}
+
+.students-header,
+.student-row {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.5fr) 90px 110px 150px;
+  align-items: center;
+}
+
+.students-header {
+  background: var(--n-soft);
+  color: var(--n-ink);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.students-header span,
+.student-row > * {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--n-line);
+}
+
+.student-row {
+  background: var(--n-surface);
+  color: var(--n-ink);
+}
+
+.student-name-button {
+  border: 0;
+  background: transparent;
+  color: var(--n-score);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+}
+
+.student-name-button:hover {
+  text-decoration: underline;
+}
+
+.student-notes-panel {
+  display: grid;
+  gap: 0;
+  border-bottom: 1px solid var(--n-line);
+  background: var(--n-soft);
+  padding: 10px 12px 12px;
+}
+
+.inline-notes-header,
+.inline-note-row {
+  display: grid;
+  grid-template-columns: 110px minmax(220px, 1fr) 190px;
+  align-items: center;
+  gap: 10px;
+}
+
+.inline-notes-header {
+  color: var(--n-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0 0 6px;
+}
+
+.inline-note-row {
+  padding: 6px 0;
+}
+
+.inline-note-row .grade-input,
+.inline-note-row .description-input {
+  border-color: var(--n-line);
+  background: var(--n-input-bg);
+  padding: 8px 10px;
+}
+
+.new-note-row {
+  margin-top: 4px;
+  border-top: 1px dashed var(--n-dashed);
+  padding-top: 10px;
+}
+
+.inline-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+@media (max-width: 720px) {
+  .filters-row {
+    grid-template-columns: 1fr;
+  }
+
+  .grades-header,
+  .grades-row {
+    grid-template-columns: minmax(130px, 1fr) 80px minmax(110px, 1fr);
+  }
+
+  .notes-group-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .group-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .students-header,
+  .student-row {
+    grid-template-columns: minmax(120px, 1fr) 60px 80px 118px;
+  }
+
+  .average-header,
+  .average-row {
+    grid-template-columns: minmax(120px, 1fr) 70px 90px;
+  }
+
+  .inline-notes-header,
+  .inline-note-row {
+    grid-template-columns: 80px minmax(120px, 1fr);
+  }
+
+  .inline-notes-header span:last-child {
+    display: none;
+  }
+
+  .inline-actions {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+  }
+}

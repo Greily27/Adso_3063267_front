@@ -1,0 +1,17 @@
+﻿<div class="header">
+  <h1>Gestión de Materias</h1>
+  <button mat-raised-button color="primary" (click)="openDialog()">
+    Nueva Materia
+  </button>
+
+  @if (errorMessage) {
+    <div class="error-message">{{ errorMessage }}</div>
+  }
+
+  <app-custom-table
+    [data]="materiasForTable()"
+    [columns]="columns"
+    (edit)="handleEdit($event)"
+    (delete)="handleDelete($event)">
+  </app-custom-table>
+</div>

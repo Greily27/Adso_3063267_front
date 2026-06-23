@@ -1,0 +1,71 @@
+﻿<h2 mat-dialog-title>{{ isEditMode ? 'Editar Guia' : 'Nueva Guia' }}</h2>
+
+<form [formGroup]="form">
+  <mat-dialog-content class="form-container">
+    <mat-form-field appearance="outline">
+      <mat-label>Titulo</mat-label>
+      <input matInput formControlName="titulo">
+      @if (form.get('titulo')?.hasError('required') && form.get('titulo')?.touched) {
+        <mat-error>El titulo es obligatorio</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Descripcion</mat-label>
+      <textarea matInput rows="4" formControlName="descripcion"></textarea>
+      @if (form.get('descripcion')?.hasError('required') && form.get('descripcion')?.touched) {
+        <mat-error>La descripcion es obligatoria</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Enlace del archivo</mat-label>
+      <input matInput formControlName="archivoUrl" placeholder="https://...">
+    </mat-form-field>
+
+    <label class="file-picker">
+      <span>Archivo PDF o Word</span>
+      <input type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" (change)="onFileSelected($event)">
+      <strong>{{ selectedFileName || 'Seleccionar archivo' }}</strong>
+    </label>
+
+    <div class="form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Asignacion</mat-label>
+        <mat-select formControlName="asignacionId">
+          @for (asignacion of asignacionesDisponibles(); track getAsignacionId(asignacion)) {
+            <mat-option [value]="getAsignacionId(asignacion)">{{ getAsignacionLabel(asignacion) }}</mat-option>
+          } @empty {
+            <mat-option disabled>No tienes asignaciones registradas</mat-option>
+          }
+        </mat-select>
+        @if (form.get('asignacionId')?.hasError('required') && form.get('asignacionId')?.touched) {
+          <mat-error>La asignación es obligatoria</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Estado</mat-label>
+        <mat-select formControlName="estado">
+          <mat-option [value]="true">Activa</mat-option>
+          <mat-option [value]="false">Inactiva</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    @if (!isEditMode && !form.get('archivo')?.value && !form.get('archivoUrl')?.value) {
+      <p class="form-hint">Agrega un archivo PDF/Word o un enlace del archivo.</p>
+    }
+
+    @if (isEditMode && !form.get('archivo')?.value && form.get('archivoUrl')?.value) {
+      <p class="form-hint">Si seleccionas otro archivo, reemplazara el archivo actual.</p>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+    <button mat-raised-button color="primary" type="button" (click)="onSave()">
+      {{ isEditMode ? 'Actualizar' : 'Guardar' }}
+    </button>
+  </mat-dialog-actions>
+</form>
