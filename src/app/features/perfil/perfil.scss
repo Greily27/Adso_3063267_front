@@ -17,6 +17,11 @@
   --hero-badge-bg: rgba(255, 255, 255, 0.08);
   --hero-badge-line: rgba(255, 255, 255, 0.18);
   --card-shadow: rgba(6, 40, 31, 0.08);
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 :host-context(body.app-dark-theme) {
@@ -33,6 +38,10 @@
 .profile-form {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   gap: 22px;
   color: var(--ink);
 }
@@ -40,6 +49,10 @@
 .profile-header,
 .panel,
 .message {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--surface);
@@ -197,15 +210,56 @@
 .form-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   gap: 14px;
+
+  > * {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
 }
 
 mat-form-field {
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+:host ::ng-deep {
+  .mat-mdc-form-field,
+  .mat-mdc-text-field-wrapper,
+  .mat-mdc-form-field-flex,
+  .mat-mdc-form-field-infix {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .mat-mdc-form-field-infix {
+    width: auto;
+  }
+
+  .mat-mdc-input-element,
+  .mat-mdc-select {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
 }
 
 .file-field,
 .readonly-field {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
   min-height: 56px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -239,6 +293,10 @@ mat-form-field {
 }
 
 .file-field input[type='file'] {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
   border: 1px dashed var(--line);
   border-radius: 4px;
   padding: 10px;
@@ -416,7 +474,7 @@ mat-form-field {
     align-items: flex-start;
     flex-direction: column;
     gap: 16px;
-    padding: 20px;
+    padding: 18px;
 
     h1 {
       font-size: 2rem;
@@ -434,7 +492,7 @@ mat-form-field {
   }
 
   .panel {
-    padding: 20px;
+    padding: 18px;
   }
 
   .panel-heading {
@@ -448,6 +506,7 @@ mat-form-field {
 
   .form-grid {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
 
   .profile-table-header {
@@ -460,5 +519,29 @@ mat-form-field {
 
   .profile-table-row span {
     padding: 10px 12px;
+  }
+}
+
+@media (max-width: 420px) {
+  .profile-header,
+  .panel {
+    padding: 16px;
+  }
+
+  .profile-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .panel-heading {
+    gap: 10px;
+
+    h2 {
+      font-size: 1.18rem;
+    }
+
+    p {
+      font-size: 0.9rem;
+      line-height: 1.35;
+    }
   }
 }
