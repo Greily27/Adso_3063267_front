@@ -63,6 +63,7 @@ interface BoletinEstudiante {
 })
 export class Boletines {
   public readonly institutionLogoPath = '/images/institucion/colplinista.png';
+  private readonly publicFrontendOrigin = 'https://colplinista-frontend.onrender.com';
 
   private cursosService = inject(CursosService);
   private periodosService = inject(PeriodosService);
@@ -1142,7 +1143,11 @@ export class Boletines {
   }
 
   private getInstitutionLogoUrl() {
-    return new URL(this.institutionLogoPath, window.location.origin).href;
+    const origin = ['localhost', '127.0.0.1', '0.0.0.0'].includes(window.location.hostname)
+      ? this.publicFrontendOrigin
+      : window.location.origin;
+
+    return new URL(this.institutionLogoPath, origin).href;
   }
 
   private escapeHtml(value: string) {

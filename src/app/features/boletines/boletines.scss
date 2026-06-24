@@ -516,6 +516,85 @@
   .header-actions {
     justify-content: flex-start;
   }
+
+  .report-sheet {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    padding: 14px 10px;
+  }
+
+  .school-header,
+  .student-grid,
+  .academic-report,
+  .final-summary,
+  .report-observations {
+    min-width: 0;
+  }
+
+  .school-header {
+    grid-template-columns: 58px 1fr;
+    align-items: start;
+  }
+
+  .seal {
+    width: 52px;
+    height: 52px;
+  }
+
+  .seal img {
+    width: 46px;
+    height: 46px;
+  }
+
+  .school-copy {
+    justify-items: start;
+    text-align: left;
+  }
+
+  .school-copy h1 {
+    font-size: 13px;
+  }
+
+  .year-box {
+    grid-column: 1 / -1;
+  }
+
+  .student-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .student-grid div,
+  .student-grid div:nth-child(3n),
+  .student-grid div:nth-last-child(-n + 3) {
+    border-right: 0;
+    border-bottom: 1px solid #aaa;
+  }
+
+  .student-grid div:last-child {
+    border-bottom: 0;
+  }
+
+  .student-grid strong {
+    white-space: normal;
+  }
+
+  .academic-report {
+    overflow-x: auto;
+  }
+
+  .subject-table {
+    min-width: 680px;
+  }
+
+  .final-summary {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .report-observations p {
+    overflow-wrap: anywhere;
+  }
 }
 
 @media print {
