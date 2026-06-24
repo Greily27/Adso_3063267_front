@@ -55,7 +55,11 @@ export class BoletinesService {
     const url = (boletin.archivoUrl ?? boletin.downloadUrl ?? boletin.fileUrl ?? boletin.url ?? '').trim();
 
     if (!url) return '';
-    if (/^(https?:|blob:|data:)/i.test(url)) return url;
+    if (/^(blob:|data:)/i.test(url)) return url;
+
+    if (/^https?:/i.test(url)) {
+      return this.replaceLocalhostOrigin(url);
+    }
 
     const cleanPath = url
       .replace(/\\/g, '/')
@@ -63,6 +67,20 @@ export class BoletinesService {
       .replace(/^\/+/, '');
 
     return `${API_BASE_URL}/${cleanPath}`;
+  }
+
+  private replaceLocalhostOrigin(url: string) {
+    try {
+      const parsedUrl = new URL(url);
+
+      if (['localhost', '127.0.0.1', '0.0.0.0'].includes(parsedUrl.hostname)) {
+        return `${API_BASE_URL}${parsedUrl.pathname}${parsedUrl.search}${parsedUrl.hash}`;
+      }
+
+      return url;
+    } catch {
+      return url;
+    }
   }
 
   private getBoletinKey(boletin: BoletinPublicadoModel) {
