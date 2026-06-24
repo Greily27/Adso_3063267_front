@@ -407,15 +407,43 @@ mat-form-field {
 }
 
 @media (max-width: 700px) {
+  .profile-page,
+  .profile-form {
+    gap: 16px;
+  }
+
   .profile-header {
     align-items: flex-start;
     flex-direction: column;
-    padding: 22px;
+    gap: 16px;
+    padding: 20px;
+
+    h1 {
+      font-size: 2rem;
+    }
   }
 
   .profile-badge,
   .form-grid {
+    box-sizing: border-box;
     width: 100%;
+  }
+
+  .profile-badge {
+    min-width: 0;
+  }
+
+  .panel {
+    padding: 20px;
+  }
+
+  .panel-heading {
+    align-items: flex-start;
+
+    h2 {
+      font-size: 1.35rem;
+      line-height: 1.15;
+    }
   }
 
   .form-grid {

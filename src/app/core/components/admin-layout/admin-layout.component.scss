@@ -114,6 +114,7 @@ mat-sidenav-content {
   background:
     linear-gradient(180deg, var(--app-page-bg) 0, var(--app-soft) 260px),
     var(--app-soft);
+  overflow-x: hidden;
 }
 
 .topbar {
@@ -122,6 +123,8 @@ mat-sidenav-content {
   z-index: 10;
   display: flex;
   align-items: center;
+  box-sizing: border-box;
+  width: 100%;
   gap: 16px;
   min-height: 94px;
   padding: 0 28px;
@@ -261,15 +264,23 @@ mat-sidenav-content {
 }
 
 .page-content {
+  box-sizing: border-box;
   min-height: calc(100vh - 94px);
   padding: 24px;
 }
 
 @media (max-width: 760px) {
+  mat-sidenav-content {
+    padding-top: calc(72px + env(safe-area-inset-top));
+  }
+
   .topbar {
-    gap: 10px;
+    position: fixed;
+    right: 0;
+    left: 0;
+    gap: 8px;
     min-height: 72px;
-    padding: 0 14px;
+    padding: env(safe-area-inset-top) 12px 0;
   }
 
   .menu-toggle {
@@ -280,6 +291,7 @@ mat-sidenav-content {
 
   .topbar-title {
     flex: 1 1 auto;
+    overflow: hidden;
 
     span {
       font-size: 1rem;
@@ -333,6 +345,8 @@ mat-sidenav-content {
   }
 
   .page-content {
+    width: 100%;
+    overflow-x: hidden;
     padding: 16px 16px calc(24px + env(safe-area-inset-bottom));
   }
 }
