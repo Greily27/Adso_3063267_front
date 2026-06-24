@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import Swal from 'sweetalert2';
 import { LoginInterface } from '../interfaces/login';
 import { Auth } from '../../core/services/auth';
 
@@ -44,15 +45,30 @@ export class LogIn {
     if (this.loginForm.invalid) return;
 
     const rawForm = this.loginForm.value as LoginInterface;
+    const credentials: LoginInterface = {
+      email: rawForm.email.trim().toLowerCase(),
+      password: rawForm.password
+    };
 
-    this.authService.login(rawForm).subscribe({
+    this.authService.login(credentials).subscribe({
       next: (res) => {
         console.log('Usuario autenticado:', res);
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        console.error('Error en login:', err.error.message);
+        console.error('Error en login:', err?.error?.message ?? err);
+        this.showInvalidCredentialsAlert();
       }
+    });
+  }
+
+  private showInvalidCredentialsAlert() {
+    Swal.fire({
+      icon: 'error',
+      title: 'No se pudo iniciar sesión',
+      text: 'Usuario o contraseña incorrectos.',
+      confirmButtonText: 'Aceptar',
+      confirmButtonColor: '#146b50'
     });
   }
 }
