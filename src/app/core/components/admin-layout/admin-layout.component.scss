@@ -267,9 +267,8 @@ mat-sidenav-content {
 
 @media (max-width: 760px) {
   .topbar {
-    flex-wrap: wrap;
     gap: 10px;
-    min-height: 78px;
+    min-height: 72px;
     padding: 0 14px;
   }
 
@@ -280,7 +279,7 @@ mat-sidenav-content {
   }
 
   .topbar-title {
-    flex: 1 1 calc(100% - 58px);
+    flex: 1 1 auto;
 
     span {
       font-size: 1rem;
@@ -321,8 +320,8 @@ mat-sidenav-content {
   }
 
   .topbar-account {
+    flex: 0 0 auto;
     justify-content: flex-end;
-    width: 100%;
     gap: 8px;
   }
 
@@ -334,21 +333,17 @@ mat-sidenav-content {
   }
 
   .page-content {
-    padding: 16px;
+    padding: 16px 16px calc(24px + env(safe-area-inset-bottom));
   }
 }
 
 @media (max-width: 480px) {
-  .topbar {
-    min-height: 72px;
-  }
-
-  .topbar-account {
-    width: auto;
-    margin-left: auto;
-  }
-
   .topbar-user {
     display: none;
+  }
+
+  .theme-toggle {
+    min-width: 58px;
+    padding: 0 8px;
   }
 }
