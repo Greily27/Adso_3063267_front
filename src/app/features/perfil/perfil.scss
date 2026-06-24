@@ -448,8 +448,17 @@ mat-form-field {
 }
 
 .actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
   display: flex;
   justify-content: flex-end;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 0 0;
+  background:
+    linear-gradient(180deg, transparent 0, var(--app-page-bg) 34%),
+    var(--app-page-bg);
 
   button {
     min-height: 46px;
@@ -519,6 +528,14 @@ mat-form-field {
 
   .profile-table-row span {
     padding: 10px 12px;
+  }
+
+  .actions {
+    padding: 12px 0 calc(8px + env(safe-area-inset-bottom));
+
+    button {
+      width: 100%;
+    }
   }
 }
 
