@@ -63,7 +63,7 @@ export class Observadores {
   );
 
   public categorias = [
-    'Academica',
+    'Académica',
     'Convivencia',
     'Asistencia',
     'Reconocimiento',
@@ -94,8 +94,8 @@ export class Observadores {
     { label: 'Fecha', key: 'fechaDisplay' },
     { label: 'Estudiante', key: 'studentName' },
     { label: 'Curso', key: 'cursoName' },
-    { label: 'Categoria', key: 'categoria' },
-    { label: 'Descripcion', key: 'descripcion' },
+    { label: 'Categoría', key: 'categoria' },
+    { label: 'Descripción', key: 'descripcion' },
     { label: 'Docente', key: 'docenteName' }
   ];
 
@@ -173,7 +173,7 @@ export class Observadores {
           studentName: this.getStudentName(estudiante),
           cursoName: this.getCursoName(curso),
           docenteName: this.getDocenteName(docente),
-          descripcion: observador.descripcion?.trim() || 'Sin descripcion'
+          descripcion: observador.descripcion?.trim() || 'Sin descripción'
         };
       });
   });
@@ -297,9 +297,9 @@ export class Observadores {
     const result = await Swal.fire({
       icon: 'warning',
       title: 'Eliminar observador',
-      text: `Estas seguro de eliminar el observador de ${this.formatDate(observador.fecha)}?`,
+      text: `¿Estás seguro de eliminar el observador de ${this.formatDate(observador.fecha)}?`,
       showCancelButton: true,
-      confirmButtonText: 'Si, eliminar',
+      confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar',
       confirmButtonColor: '#b4232f'
     });

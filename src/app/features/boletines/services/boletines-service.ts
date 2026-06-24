@@ -52,7 +52,17 @@ export class BoletinesService {
   }
 
   getBoletinUrl(boletin: BoletinPublicadoModel) {
-    return boletin.archivoUrl ?? boletin.downloadUrl ?? boletin.fileUrl ?? boletin.url ?? '';
+    const url = (boletin.archivoUrl ?? boletin.downloadUrl ?? boletin.fileUrl ?? boletin.url ?? '').trim();
+
+    if (!url) return '';
+    if (/^(https?:|blob:|data:)/i.test(url)) return url;
+
+    const cleanPath = url
+      .replace(/\\/g, '/')
+      .replace(/^\.?\//, '')
+      .replace(/^\/+/, '');
+
+    return `${API_BASE_URL}/${cleanPath}`;
   }
 
   private getBoletinKey(boletin: BoletinPublicadoModel) {
