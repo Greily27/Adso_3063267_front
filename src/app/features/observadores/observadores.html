@@ -87,4 +87,49 @@
     (edit)="handleEdit($event)"
     (delete)="handleDelete($event)">
   </app-custom-table>
+
+  <div class="observadores-cards" aria-label="Listado de observadores">
+    @for (observador of observadoresForTable(); track observador.idObservador ?? observador.id ?? $index) {
+      <article class="observador-card">
+        <div class="card-top">
+          <div>
+            <span class="card-kicker">{{ observador.fechaDisplay }}</span>
+            <h2>{{ observador.studentName }}</h2>
+          </div>
+
+          <span class="category-pill">{{ observador.categoria }}</span>
+        </div>
+
+        <dl class="card-details">
+          <div>
+            <dt>Curso</dt>
+            <dd>{{ observador.cursoName }}</dd>
+          </div>
+
+          <div>
+            <dt>Docente</dt>
+            <dd>{{ observador.docenteName }}</dd>
+          </div>
+
+          <div class="description-row">
+            <dt>Descripción</dt>
+            <dd>{{ observador.descripcion }}</dd>
+          </div>
+        </dl>
+
+        @if (canManageObservadores()) {
+          <div class="card-actions">
+            <button mat-stroked-button color="primary" type="button" (click)="handleEdit(observador)">
+              Editar
+            </button>
+            <button mat-stroked-button color="warn" type="button" (click)="handleDelete(observador)">
+              Eliminar
+            </button>
+          </div>
+        }
+      </article>
+    } @empty {
+      <div class="empty-state">No hay observadores registrados.</div>
+    }
+  </div>
 </div>
