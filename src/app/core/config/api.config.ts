@@ -1,2 +1,1 @@
-export const API_BASE_URL = 'https://colplinista-backend-dev.onrender.com';
-
+export const API_BASE_URL = 'https://colplinista-backend.onrender.com';
