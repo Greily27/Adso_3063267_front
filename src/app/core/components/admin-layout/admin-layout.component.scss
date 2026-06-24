@@ -121,6 +121,7 @@ mat-sidenav-content {
   top: 0;
   z-index: 10;
   display: flex;
+  align-items: center;
   gap: 16px;
   min-height: 94px;
   padding: 0 28px;
@@ -128,6 +129,13 @@ mat-sidenav-content {
   background: var(--app-topbar-bg);
   box-shadow: 0 10px 30px rgba(6, 40, 31, 0.08);
   color: var(--app-ink);
+}
+
+.menu-toggle {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  color: var(--app-green-900);
 }
 
 .topbar-title {
@@ -259,8 +267,25 @@ mat-sidenav-content {
 
 @media (max-width: 760px) {
   .topbar {
-    min-height: 84px;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-height: 78px;
     padding: 0 14px;
+  }
+
+  .menu-toggle {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+  }
+
+  .topbar-title {
+    flex: 1 1 calc(100% - 58px);
+
+    span {
+      font-size: 1rem;
+      line-height: 1.15;
+    }
   }
 
   .topbar-title small {
@@ -296,6 +321,8 @@ mat-sidenav-content {
   }
 
   .topbar-account {
+    justify-content: flex-end;
+    width: 100%;
     gap: 8px;
   }
 
@@ -308,5 +335,20 @@ mat-sidenav-content {
 
   .page-content {
     padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar {
+    min-height: 72px;
+  }
+
+  .topbar-account {
+    width: auto;
+    margin-left: auto;
+  }
+
+  .topbar-user {
+    display: none;
   }
 }

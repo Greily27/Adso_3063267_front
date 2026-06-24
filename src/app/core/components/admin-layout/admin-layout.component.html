@@ -19,7 +19,7 @@
     </mat-toolbar>
     @if (authService.isAuthenticated()) {
       <mat-nav-list class="sidebar-nav">
-        <a mat-list-item class="nav-item" routerLink="/dashboard" routerLinkActive="active-link">
+        <a mat-list-item class="nav-item" routerLink="/dashboard" routerLinkActive="active-link" (click)="onModuleClick(drawer)">
           <span matListItemIcon class="nav-icon">
             <mat-icon>dashboard</mat-icon>
           </span>
@@ -30,7 +30,7 @@
           <a mat-list-item
             class="nav-item"
             [routerLink]="getModuleLink(moduleName)"
-            (click)="onModuleClick($event, moduleName)"
+            (click)="onModuleClick(drawer)"
             routerLinkActive="active-link">
             <span matListItemIcon class="nav-icon">
               <mat-icon>{{ getModuleIcon(moduleName) }}</mat-icon>
@@ -38,7 +38,7 @@
             <span matListItemTitle>{{ getModuleLabel(moduleName) }}</span>
           </a>
         }
-        <a mat-list-item class="nav-item logout-link" (click)="logout()">
+        <a mat-list-item class="nav-item logout-link" (click)="logout(drawer)">
           <span matListItemIcon class="nav-icon">
             <mat-icon>logout</mat-icon>
           </span>
@@ -50,7 +50,7 @@
   <mat-sidenav-content>
     <mat-toolbar class="topbar">
       @if (isHandset$ | async) {
-        <button type="button" aria-label="Toggle sidenav" matIconButton (click)="drawer.toggle()">
+        <button type="button" class="menu-toggle" aria-label="Abrir menú" mat-icon-button (click)="drawer.toggle()">
           <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
         </button>
       }

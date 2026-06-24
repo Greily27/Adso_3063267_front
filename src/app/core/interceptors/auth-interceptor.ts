@@ -8,9 +8,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   if (token) {
     const authReq = req.clone({
       setHeaders: {
-        Authorization: `Bearer ${token}`,
-        'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache'
+        Authorization: `Bearer ${token}`
       }
     });
     // 3. Enviamos la petición modificada

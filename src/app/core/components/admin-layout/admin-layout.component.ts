@@ -3,7 +3,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { AsyncPipe } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { Observable } from 'rxjs';
@@ -86,7 +86,8 @@ export class AdminLayoutComponent {
     this.setTheme(!this.isDarkTheme());
   }
 
-  logout(){
+  logout(drawer?: MatSidenav){
+    drawer?.close();
     this.authService.logout();
   }
 
@@ -122,8 +123,10 @@ export class AdminLayoutComponent {
     this.brokenCurrentUserPhoto.set(image.currentSrc || image.src || this.getCurrentUserPhoto());
   }
 
-  onModuleClick(event: MouseEvent, moduleName: string) {
-    return;
+  onModuleClick(drawer: MatSidenav) {
+    if (drawer.mode === 'over') {
+      drawer.close();
+    }
   }
 
   getModuleLink(moduleName: string) {
