@@ -434,6 +434,10 @@ app-custom-table {
   max-width: 100%;
 }
 
+.swal2-container {
+  z-index: 12000 !important;
+}
+
 @media (max-width: 760px) {
   .header,
   .page-header,

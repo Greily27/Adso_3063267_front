@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { forkJoin, of } from 'rxjs';
+import Swal from 'sweetalert2';
 import { Auth } from '../../core/services/auth';
 import { API_BASE_URL } from '../../core/config/api.config';
 import { AsignacionModel, CursoModel as CursoAsignacionModel, MateriaModel } from '../cursos/models/curso.model';
@@ -280,11 +281,13 @@ export class Perfil {
           roles: updatedUser.roles ?? selectedRoles
         });
         this.successMessage = 'Perfil actualizado correctamente.';
+        this.showSuccessAlert(this.successMessage);
       },
       error: (err: HttpErrorResponse) => {
         this.isSaving = false;
         console.error('Error al actualizar perfil', err);
         this.errorMessage = this.getErrorMessage(err, 'No se pudo actualizar el perfil.');
+        this.showErrorAlert(this.errorMessage);
       }
     });
   }
@@ -508,5 +511,25 @@ export class Perfil {
 
     if (Array.isArray(message)) return message.join(' ');
     return message || (err.status ? `${fallback} Error ${err.status}: ${err.statusText}` : fallback);
+  }
+
+  private showSuccessAlert(message: string) {
+    Swal.fire({
+      icon: 'success',
+      title: 'Perfil actualizado',
+      text: message,
+      confirmButtonText: 'Aceptar',
+      confirmButtonColor: '#146b50'
+    });
+  }
+
+  private showErrorAlert(message: string) {
+    Swal.fire({
+      icon: 'error',
+      title: 'No se pudo actualizar',
+      text: message,
+      confirmButtonText: 'Aceptar',
+      confirmButtonColor: '#146b50'
+    });
   }
 }
