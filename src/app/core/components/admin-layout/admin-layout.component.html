@@ -4,6 +4,7 @@
     class="sidenav"
     fixedInViewport
     [autoFocus]="false"
+    (backdropClick)="drawer.close()"
     [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
     [opened]="(isHandset$ | async) === false"
@@ -16,6 +17,11 @@
         <strong>COLPLINISTA</strong>
         <small>Academico</small>
       </span>
+      @if (isHandset$ | async) {
+        <button type="button" class="sidebar-close" mat-icon-button aria-label="Cerrar menú" (click)="drawer.close()">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
     </mat-toolbar>
     @if (authService.isAuthenticated()) {
       <mat-nav-list class="sidebar-nav">
@@ -50,8 +56,13 @@
   <mat-sidenav-content>
     <mat-toolbar class="topbar">
       @if (isHandset$ | async) {
-        <button type="button" class="menu-toggle" aria-label="Abrir menú" mat-icon-button (click)="drawer.toggle()">
-          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+        <button
+          type="button"
+          class="menu-toggle"
+          [attr.aria-label]="drawer.opened ? 'Cerrar menú' : 'Abrir menú'"
+          mat-icon-button
+          (click)="drawer.toggle()">
+          <mat-icon aria-label="Side nav toggle icon">{{ drawer.opened ? 'close' : 'menu' }}</mat-icon>
         </button>
       }
       <div class="topbar-title">

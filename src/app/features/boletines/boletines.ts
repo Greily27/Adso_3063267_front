@@ -410,7 +410,10 @@ export class Boletines {
     const url = this.getPublishedBoletinUrl(boletin);
     if (!url) return;
 
-    window.open(url, '_blank', 'noopener,noreferrer');
+    const openedWindow = window.open(url, '_blank', 'noopener,noreferrer');
+    if (!openedWindow) {
+      window.location.href = url;
+    }
   }
 
   public getPublishedBoletinUrl(boletin: BoletinPublicadoModel) {

@@ -37,24 +37,27 @@ export class ForgotPassword {
   });
 
   onSubmit() {
-    if (this.forgotPasswordForm.invalid || this.isLoading) return;
+    if (this.forgotPasswordForm.invalid || this.isLoading) {
+      this.forgotPasswordForm.markAllAsTouched();
+      return;
+    }
 
-    const email = this.forgotPasswordForm.controls.email.value ?? '';
+    const email = (this.forgotPasswordForm.controls.email.value ?? '').trim().toLowerCase();
     this.isLoading = true;
 
     this.authService.requestPasswordReset({ email }).subscribe({
-      next: () => this.showSuccessMessage(),
+      next: response => this.showSuccessMessage(response?.message),
       error: (err) => this.showErrorMessage(err)
     });
   }
 
-  private showSuccessMessage() {
+  private showSuccessMessage(message?: string) {
     this.isLoading = false;
 
     Swal.fire({
       icon: 'success',
       title: 'Revisa tu correo',
-      text: 'Si el correo está registrado, recibirás un enlace para recuperar tu contraseña.',
+      text: message || 'Si el correo está registrado, recibirás un enlace para recuperar tu contraseña.',
       confirmButtonText: 'Aceptar',
       confirmButtonColor: '#146b50'
     });

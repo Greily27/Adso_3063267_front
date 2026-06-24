@@ -98,4 +98,114 @@ app-custom-table {
   .form-grid {
     grid-template-columns: 1fr;
   }
+
+  :host ::ng-deep app-custom-table.observadores-table .mat-elevation-z8 {
+    overflow: visible;
+  }
+
+  :host ::ng-deep app-custom-table.observadores-table table,
+  :host ::ng-deep app-custom-table.observadores-table thead,
+  :host ::ng-deep app-custom-table.observadores-table tbody,
+  :host ::ng-deep app-custom-table.observadores-table tr,
+  :host ::ng-deep app-custom-table.observadores-table th,
+  :host ::ng-deep app-custom-table.observadores-table td {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  :host ::ng-deep app-custom-table.observadores-table table {
+    min-width: 0;
+    background: transparent;
+  }
+
+  :host ::ng-deep app-custom-table.observadores-table tr.mat-mdc-header-row {
+    display: none;
+  }
+
+  :host ::ng-deep app-custom-table.observadores-table tr.mat-mdc-row {
+    display: grid;
+    gap: 10px;
+    min-height: 0;
+    margin: 0 0 12px;
+    border: 1px solid var(--app-border);
+    border-radius: 8px;
+    padding: 12px;
+    background: var(--app-card);
+  }
+
+  :host ::ng-deep app-custom-table.observadores-table td.mat-mdc-cell {
+    display: grid;
+    grid-template-columns: minmax(88px, 34%) minmax(0, 1fr);
+    gap: 10px;
+    align-items: start;
+    border: 0;
+    padding: 0;
+    color: var(--app-ink);
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+
+  :host ::ng-deep app-custom-table.observadores-table td.mat-mdc-cell::before {
+    color: var(--app-muted);
+    content: '';
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  :host ::ng-deep app-custom-table.observadores-table .mat-column-fechaDisplay::before {
+    content: 'Fecha';
+  }
+
+  :host ::ng-deep app-custom-table.observadores-table .mat-column-studentName::before {
+    content: 'Estudiante';
+  }
+
+  :host ::ng-deep app-custom-table.observadores-table .mat-column-cursoName::before {
+    content: 'Curso';
+  }
+
+  :host ::ng-deep app-custom-table.observadores-table .mat-column-categoria::before {
+    content: 'Categoría';
+  }
+
+  :host ::ng-deep app-custom-table.observadores-table .mat-column-descripcion::before {
+    content: 'Descripción';
+  }
+
+  :host ::ng-deep app-custom-table.observadores-table .mat-column-docenteName::before {
+    content: 'Docente';
+  }
+
+  :host ::ng-deep app-custom-table.observadores-table .mat-column-actions {
+    display: flex;
+    justify-content: flex-end;
+    min-height: 40px;
+    padding-top: 4px;
+  }
+
+  :host ::ng-deep app-custom-table.observadores-table .mat-column-actions::before {
+    content: '';
+    display: none;
+  }
+
+  :host ::ng-deep app-custom-table.observadores-table mat-paginator {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 420px) {
+  .header {
+    padding: 12px;
+  }
+
+  :host ::ng-deep app-custom-table.observadores-table td.mat-mdc-cell {
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
 }
