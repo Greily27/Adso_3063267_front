@@ -516,11 +516,19 @@ export class Estudiantes {
 
   private createStudentFromFormValue(formValue: EstudianteFormValue) {
     const payload = this.toCreatePayload(formValue);
+    const existingStudentUser = formValue.user
+      ?? this.usersService.users().find(user =>
+        (!!formValue.document && user.document === formValue.document)
+        || (
+          !!formValue.email
+          && this.normalizeText(user.email) === this.normalizeText(formValue.email)
+        )
+      );
 
-    if (formValue.user?.id) {
+    if (existingStudentUser?.id) {
       return this.estudiantesService.createEstudiante({
         ...payload.estudiante,
-        userId: formValue.user.id
+        userId: existingStudentUser.id
       });
     }
 

@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, map, of, switchMap } from 'rxjs';
 import Swal from 'sweetalert2';
 import { Auth } from '../../core/services/auth';
 import { API_BASE_URL } from '../../core/config/api.config';
@@ -19,7 +19,6 @@ import { DiaHorario, HorarioModel } from '../horarios/models/horario.model';
 import { HorariosService } from '../horarios/services/horarios-service';
 import { UpdateUserDto, UserModel } from '../users/models/user.model';
 import { UsersService } from '../users/services/users-service';
-import { getProfilePhoto } from '../users/utils/user-dto.mapper';
 import { fileToCompressedImageDataUrl } from '../../shared/utils/image-file.util';
 
 interface BloquePerfilHorario {
@@ -67,6 +66,7 @@ export class Perfil {
   public photoError = '';
   public isSaving = false;
   private brokenProfilePhoto = signal('');
+  private selectedPhotoFile = signal<File | null>(null);
 
   public dias: Array<{ key: DiaHorario; label: string }> = [
     { key: 'lunes', label: 'Lunes' },
@@ -266,14 +266,30 @@ export class Perfil {
     this.successMessage = '';
     this.errorMessage = '';
 
+    const userUpdate = this.usersService.updateUser(user.id, userDto, selectedRoles).pipe(
+      switchMap(updatedUser => {
+        const photo = this.selectedPhotoFile();
+        if (!photo) return of(updatedUser);
+
+        return this.usersService.updateUserPhoto(user.id, photo).pipe(
+          map(photoUpdatedUser => ({
+            ...updatedUser,
+            ...photoUpdatedUser,
+            roles: photoUpdatedUser.roles ?? updatedUser.roles ?? selectedRoles
+          }))
+        );
+      })
+    );
+
     forkJoin({
-      user: this.usersService.updateUser(user.id, userDto, selectedRoles),
+      user: userUpdate,
       estudiante: this.isStudentProfile() && estudiante
         ? this.estudiantesService.updateEstudiante(this.getEstudianteId(estudiante), this.toEstudianteDto(value))
         : of(null)
     }).subscribe({
       next: ({ user: updatedUser }) => {
         this.isSaving = false;
+        this.selectedPhotoFile.set(null);
         this.form.controls.password.setValue('');
         this.authService.updateLocalUser({
           ...user,
@@ -301,6 +317,7 @@ export class Perfil {
     try {
       this.photoError = '';
       const photo = await fileToCompressedImageDataUrl(file);
+      this.selectedPhotoFile.set(file);
       this.brokenProfilePhoto.set('');
       this.form.patchValue({ photo });
     } catch (error) {
@@ -351,14 +368,14 @@ export class Perfil {
       cleanPhoto.startsWith('data:image/')
       || cleanPhoto.startsWith('http://')
       || cleanPhoto.startsWith('https://')
-      || cleanPhoto.startsWith('/')
     ) {
       return cleanPhoto;
     }
 
     const relativePhotoPath = cleanPhoto
       .replace(/\\/g, '/')
-      .replace(/^\.?\//, '');
+      .replace(/^\.?\//, '')
+      .replace(/^\/+/, '');
 
     const staticPhotoPath = relativePhotoPath.startsWith('uploads/')
       ? relativePhotoPath
@@ -387,7 +404,6 @@ export class Perfil {
       address: value.address ?? '',
       docType: value.docType ?? '',
       document: value.document ?? '',
-      photo: getProfilePhoto(value.photo || currentUser.photo),
       email: value.email ?? '',
       isActive: currentUser.isActive,
       roleIds: (currentUser.roles ?? [])

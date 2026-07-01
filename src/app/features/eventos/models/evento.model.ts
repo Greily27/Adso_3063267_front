@@ -12,6 +12,9 @@ export interface EventoModel {
   ubicacion: string;
   imagen?: string;
   imagenUrl?: string;
+  imageUrl?: string;
+  rutaImagen?: string;
+  imagenPath?: string;
   destinatarios: EventoDestinatario[];
   estado: EventoEstado;
 }

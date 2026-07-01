@@ -69,6 +69,20 @@ export class UsersService {
     );
   }
 
+  updateUserPhoto(id: number, photo: File) {
+    const formData = new FormData();
+    formData.append('photo', photo, photo.name);
+
+    return this.http.put<UserModel>(`${this.apiUrl}/${id}/photo`, formData).pipe(
+      map(user => this.normalizeUserMaterias(user)),
+      tap(updatedUser => {
+        this.userSignal.update(users =>
+          users.map(user => user.id === id ? { ...user, ...updatedUser } : user)
+        );
+      })
+    );
+  }
+
   deleteUser(id: number) {
     return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
       tap(() => this.userSignal.update(users => users.filter(user => user.id !== id)))

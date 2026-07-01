@@ -216,14 +216,14 @@ export class AdminLayoutComponent {
       cleanPhoto.startsWith('data:image/')
       || cleanPhoto.startsWith('http://')
       || cleanPhoto.startsWith('https://')
-      || cleanPhoto.startsWith('/')
     ) {
       return cleanPhoto;
     }
 
     const relativePhotoPath = cleanPhoto
       .replace(/\\/g, '/')
-      .replace(/^\.?\//, '');
+      .replace(/^\.?\//, '')
+      .replace(/^\/+/, '');
 
     const staticPhotoPath = relativePhotoPath.startsWith('uploads/')
       ? relativePhotoPath
