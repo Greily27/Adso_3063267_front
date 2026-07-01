@@ -125,10 +125,15 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>{{ isEditMode ? 'Nueva contraseña del estudiante' : 'Contraseña del estudiante' }}</mat-label>
-      <input matInput type="password" formControlName="password">
-    </mat-form-field>
+    @if (!form.controls.user.value || isEditMode) {
+      <mat-form-field appearance="outline">
+        <mat-label>{{ isEditMode ? 'Nueva contraseña del estudiante (opcional)' : 'Contraseña del estudiante' }}</mat-label>
+        <input matInput type="password" formControlName="password">
+        @if (form.controls.password.hasError('minlength')) {
+          <mat-error>Debe tener al menos 6 caracteres</mat-error>
+        }
+      </mat-form-field>
+    }
 
     <mat-form-field appearance="outline">
       <mat-label>Curso</mat-label>
