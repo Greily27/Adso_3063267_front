@@ -1,1 +1,58 @@
-<p>sign-in works!</p>
+<main class="access-page">
+  <section class="access-card">
+    <a class="brand" routerLink="/auth/login" aria-label="Volver al inicio de sesión">
+      <img src="/images/institucion/colplinista.png" alt="Logo institucional">
+      <span>
+        <strong>COLPLINISTA</strong>
+        <small>Gestión académica</small>
+      </span>
+    </a>
+
+    <div class="access-icon" aria-hidden="true">
+      <mat-icon>support_agent</mat-icon>
+    </div>
+
+    <span class="eyebrow">Solicitud de acceso</span>
+    <h1>¿No tienes una cuenta?</h1>
+    <p class="lead">
+      Las cuentas son creadas directamente por la institución. No necesitas registrarte desde esta plataforma.
+    </p>
+
+    <div class="steps">
+      <article>
+        <span>1</span>
+        <div>
+          <h2>Contacta a la institución</h2>
+          <p>Solicita la creación o revisión de tu cuenta en secretaría o coordinación académica.</p>
+        </div>
+      </article>
+
+      <article>
+        <span>2</span>
+        <div>
+          <h2>Revisa tu correo</h2>
+          <p>Si eres un acudiente nuevo, recibirás un mensaje para establecer tu contraseña. Revisa también la carpeta de spam.</p>
+        </div>
+      </article>
+
+      <article>
+        <span>3</span>
+        <div>
+          <h2>¿Ya tenías acceso?</h2>
+          <p>Utiliza la recuperación de contraseña con el correo registrado en la institución.</p>
+        </div>
+      </article>
+    </div>
+
+    <div class="actions">
+      <a mat-raised-button color="primary" routerLink="/auth/login">
+        <mat-icon>arrow_back</mat-icon>
+        Volver a iniciar sesión
+      </a>
+      <a mat-stroked-button routerLink="/auth/forgot-password">
+        <mat-icon>lock_reset</mat-icon>
+        Recuperar contraseña
+      </a>
+    </div>
+  </section>
+</main>
