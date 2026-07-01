@@ -101,12 +101,11 @@ export class EstudiantesForm implements OnInit {
 
     this.userSubscription = this.form.controls.user.valueChanges.subscribe(user => {
       this.patchUserFields(user);
+      this.syncStudentUserValidators(user);
     });
 
     if (this.data) {
       this.isEditMode = true;
-      this.form.controls.password.clearValidators();
-      this.form.controls.password.updateValueAndValidity();
       this.form.patchValue({
         tipoDocTutor: this.data.tipoDocTutor,
         documentoTutor: this.data.documentoTutor,
@@ -119,7 +118,11 @@ export class EstudiantesForm implements OnInit {
         cursoId: this.getSelectedCursoFromData()
       });
       this.patchUserFields(this.data.user);
+      this.syncStudentUserValidators(this.data.user);
+      return;
     }
+
+    this.syncStudentUserValidators(this.form.controls.user.value);
   }
 
   ngOnDestroy() {
@@ -175,6 +178,36 @@ export class EstudiantesForm implements OnInit {
       isActive: user?.isActive ?? true,
       password: ''
     }, { emitEvent: false });
+  }
+
+  private syncStudentUserValidators(user: UserModel | null) {
+    const creatingNewUser = !this.isEditMode && !user;
+    const requiredControls = [
+      this.form.controls.names,
+      this.form.controls.lastNames,
+      this.form.controls.phone,
+      this.form.controls.address,
+      this.form.controls.docType,
+      this.form.controls.document
+    ];
+
+    requiredControls.forEach(control => {
+      if (creatingNewUser) {
+        control.setValidators(Validators.required);
+      } else {
+        control.clearValidators();
+      }
+      control.updateValueAndValidity({ emitEvent: false });
+    });
+
+    this.form.controls.email.setValidators(
+      creatingNewUser ? [Validators.required, Validators.email] : Validators.email
+    );
+    this.form.controls.password.setValidators(
+      creatingNewUser ? [Validators.required, Validators.minLength(6)] : []
+    );
+    this.form.controls.email.updateValueAndValidity({ emitEvent: false });
+    this.form.controls.password.updateValueAndValidity({ emitEvent: false });
   }
 
   private getSelectedCursoFromData() {
