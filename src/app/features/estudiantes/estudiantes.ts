@@ -116,6 +116,7 @@ export class Estudiantes {
     && !this.hasRole('administrador')
     && !this.hasRole('auxiliar administrativo')
   );
+  public isAcudienteMode = this.authService.isAcudiente;
 
   public docenteCursoIds = computed(() => {
     const currentUserId = this.currentUser()?.id;
@@ -131,7 +132,7 @@ export class Estudiantes {
 
   public docenteHasAssignedCursos = computed(() => this.docenteCursoIds().size > 0);
 
-  public canManageStudents = computed(() => !this.isDocenteMode());
+  public canManageStudents = computed(() => !this.isDocenteMode() && !this.isAcudienteMode());
 
   public estudiantesVisibles = computed(() => {
     const estudiantes = this.estudiantesService.estudiantes();
@@ -250,6 +251,12 @@ export class Estudiantes {
   constructor(private dialog: MatDialog) { }
 
   ngOnInit() {
+    if (this.isAcudienteMode()) {
+      this.estudiantesService.loadMisAcudidos();
+      return;
+    }
+
+    this.estudiantesService.loadEstudiantes();
     this.cursosService.loadCursos();
     this.cursosService.loadAsignaciones();
     this.usersService.loadUsers();
@@ -627,6 +634,7 @@ export class Estudiantes {
   }
 
   public canEditStudent(estudiante: EstudianteModel) {
+    if (this.isAcudienteMode()) return false;
     if (!this.isDocenteMode()) return true;
     if (!this.docenteHasAssignedCursos()) return false;
 

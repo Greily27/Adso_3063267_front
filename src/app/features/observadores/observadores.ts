@@ -55,7 +55,9 @@ export class Observadores {
   public errorMessage = '';
   public editingObservador = signal<ObservadorModel | null>(null);
   public selectedCurso = signal<CursoModel | null>(null);
-  public canManageObservadores = computed(() => (this.isAdmin() || this.isDocente()) && !this.isEstudiante());
+  public canManageObservadores = computed(() =>
+    !this.isAcudiente() && (this.isAdmin() || this.isDocente()) && !this.isEstudiante()
+  );
   public docentesDisponibles = computed(() =>
     this.usersService.users().filter(user =>
       user.roles?.some(role => this.normalizeRoleName(role.name).includes('docente'))
@@ -179,6 +181,12 @@ export class Observadores {
   });
 
   ngOnInit() {
+    if (this.isAcudiente()) {
+      this.estudiantesService.loadMisAcudidos();
+      this.observadoresService.loadObservadores();
+      return;
+    }
+
     this.cursosService.loadCursos();
     this.cursosService.loadAsignaciones();
     this.estudiantesService.loadEstudiantes();
@@ -488,6 +496,10 @@ export class Observadores {
     const roles = currentUser?.roles?.length ? currentUser.roles : fullUser?.roles ?? [];
 
     return roles.some(role => this.normalizeRoleName(role.name).includes('estudiante'));
+  }
+
+  public isAcudiente() {
+    return this.authService.isAcudiente();
   }
 
   private normalizeRoleName(roleName: string) {

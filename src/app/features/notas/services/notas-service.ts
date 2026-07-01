@@ -3,19 +3,21 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { tap } from 'rxjs';
 import { CreateNotaDto, NotaModel, UpdateNotaDto } from '../models/nota.model';
+import { Auth } from '../../../core/services/auth';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotasService {
   private http = inject(HttpClient);
+  private auth = inject(Auth);
   private apiUrl = `${API_BASE_URL}/notas`;
 
   private notasSignal = signal<NotaModel[]>([]);
   public notas = this.notasSignal.asReadonly();
 
   constructor() {
-    this.loadNotas();
+    if (!this.auth.isAcudiente()) this.loadNotas();
   }
 
   loadNotas() {

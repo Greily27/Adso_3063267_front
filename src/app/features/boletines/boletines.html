@@ -11,7 +11,7 @@
         <mat-icon>refresh</mat-icon>
         Actualizar
       </button>
-      @if (!isStudentMode()) {
+      @if (!isStudentMode() && !isAcudienteMode()) {
         <button mat-raised-button color="primary" type="button" [disabled]="!puedeGenerarBoletines()" (click)="generarBoletines()">
           <mat-icon>article</mat-icon>
           {{ getGenerateButtonText() }}
@@ -26,6 +26,44 @@
     </div>
   </div>
 
+  @if (isAcudienteMode()) {
+    @if (publishMessage()) {
+      <div class="alerts publish-status"><p>{{ publishMessage() }}</p></div>
+    }
+
+    <section class="students-panel">
+      <div class="students-panel-header">
+        <div>
+          <h2>Boletines publicados</h2>
+          <p>{{ misBoletines().length }} boletín{{ misBoletines().length === 1 ? '' : 'es' }} disponible{{ misBoletines().length === 1 ? '' : 's' }}</p>
+        </div>
+      </div>
+
+      <div class="published-list">
+        @for (boletin of misBoletines(); track getPublishedBoletinId(boletin, $index)) {
+          <article class="published-item">
+            <div>
+              <strong>{{ getPublishedStudentName(boletin) }}</strong>
+              <span>{{ getPublishedPeriodoName(boletin) }}</span>
+              <small>Publicado: {{ getPublishedDate(boletin) }}</small>
+            </div>
+            <div class="row-actions">
+              <button mat-stroked-button type="button" (click)="verBoletinAcudido(boletin)">
+                <mat-icon>visibility</mat-icon>
+                Ver
+              </button>
+              <button mat-stroked-button type="button" (click)="descargarBoletinPublicado(boletin)">
+                <mat-icon>download</mat-icon>
+                Descargar
+              </button>
+            </div>
+          </article>
+        } @empty {
+          <p class="empty-row">Aún no hay boletines publicados para tus estudiantes.</p>
+        }
+      </div>
+    </section>
+  } @else {
   <div class="filters-panel">
     @if (!isStudentMode()) {
       <mat-form-field appearance="outline">
@@ -289,5 +327,6 @@
         </section>
       </article>
     </div>
+  }
   }
 </section>

@@ -4,19 +4,21 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { catchError, of, switchMap, tap, throwError } from 'rxjs';
 import { CreateMateriaDto, MateriaModel, UpdateMateriaDto } from '../models/materia.model';
+import { Auth } from '../../../core/services/auth';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MateriasService {
   private http = inject(HttpClient);
+  private auth = inject(Auth);
   private apiUrl = `${API_BASE_URL}/materias`;
 
   private materiasSignal = signal<MateriaModel[]>([]);
   public materias = this.materiasSignal.asReadonly();
 
   constructor() {
-    this.loadMaterias();
+    if (!this.auth.isAcudiente()) this.loadMaterias();
   }
 
   loadMaterias() {

@@ -1,0 +1,121 @@
+<section class="events-page">
+  <header class="events-header">
+    <div>
+      <span class="eyebrow">Agenda institucional</span>
+      <h1>Eventos</h1>
+      <p>{{ isAcudiente() ? 'Consulta los eventos publicados para acudientes.' : 'Crea y administra los eventos de la comunidad educativa.' }}</p>
+    </div>
+
+    @if (canManage()) {
+      <button mat-raised-button color="primary" type="button" (click)="openCreate()">
+        <mat-icon>add</mat-icon>
+        Nuevo evento
+      </button>
+    }
+  </header>
+
+  @if (errorMessage()) {
+    <p class="error-message">{{ errorMessage() }}</p>
+  }
+
+  @if (showForm() && canManage()) {
+    <form class="event-form" [formGroup]="form" (ngSubmit)="save()">
+      <h2>{{ editingEvento() ? 'Editar evento' : 'Crear evento' }}</h2>
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Título</mat-label>
+          <input matInput formControlName="titulo">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Categoría</mat-label>
+          <input matInput formControlName="categoria">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha de inicio</mat-label>
+          <input matInput type="datetime-local" formControlName="fechaInicio">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha de finalización</mat-label>
+          <input matInput type="datetime-local" formControlName="fechaFin">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Ubicación</mat-label>
+          <input matInput formControlName="ubicacion">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Estado</mat-label>
+          <mat-select formControlName="estado">
+            @for (estado of estados; track estado) {
+              <mat-option [value]="estado">{{ estado }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Destinatarios</mat-label>
+          <mat-select formControlName="destinatarios" multiple>
+            @for (destinatario of destinatarios; track destinatario) {
+              <mat-option [value]="destinatario">{{ destinatario }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <label class="image-field">
+          <span>Imagen</span>
+          <input type="file" accept="image/*" (change)="onImageChange($event)">
+        </label>
+      </div>
+
+      <mat-form-field appearance="outline" class="description">
+        <mat-label>Descripción</mat-label>
+        <textarea matInput rows="4" formControlName="descripcion"></textarea>
+      </mat-form-field>
+
+      <div class="form-actions">
+        <button mat-button type="button" (click)="closeForm()">Cancelar</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+          {{ editingEvento() ? 'Actualizar' : 'Crear' }}
+        </button>
+      </div>
+    </form>
+  }
+
+  <div class="events-grid">
+    @for (evento of eventos(); track getId(evento) ?? $index) {
+      <article class="event-card">
+        @if (getImageUrl(evento)) {
+          <img [src]="getImageUrl(evento)" [alt]="evento.titulo">
+        }
+        <div class="event-content">
+          <div class="event-meta">
+            <span>{{ evento.categoria }}</span>
+            @if (!isAcudiente()) {
+              <span class="status">{{ evento.estado }}</span>
+            }
+          </div>
+          <h2>{{ evento.titulo }}</h2>
+          <p>{{ evento.descripcion }}</p>
+          <dl>
+            <div><dt>Inicio</dt><dd>{{ formatDate(evento.fechaInicio) }}</dd></div>
+            <div><dt>Fin</dt><dd>{{ formatDate(evento.fechaFin) }}</dd></div>
+            <div><dt>Lugar</dt><dd>{{ evento.ubicacion }}</dd></div>
+          </dl>
+
+          @if (canManage()) {
+            <div class="card-actions">
+              <button mat-button type="button" (click)="openEdit(evento)">Editar</button>
+              <button mat-button color="warn" type="button" (click)="remove(evento)">Eliminar</button>
+            </div>
+          }
+        </div>
+      </article>
+    } @empty {
+      <p class="empty-state">No hay eventos disponibles.</p>
+    }
+  </div>
+</section>

@@ -1,7 +1,7 @@
 ﻿import { API_BASE_URL } from '../../../core/config/api.config';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { catchError, of, tap } from 'rxjs';
+import { catchError, Observable, of, tap } from 'rxjs';
 import { BoletinPublicadoModel, PublicarBoletinesDto } from '../models/boletin.model';
 
 @Injectable({
@@ -30,6 +30,27 @@ export class BoletinesService {
         return of([]);
       })
     ).subscribe(data => this.misBoletinesSignal.set(data));
+  }
+
+  loadBoletinesAcudidos() {
+    this.http.get<BoletinPublicadoModel[]>(`${this.apiUrl}/acudidos`).pipe(
+      catchError(err => {
+        console.error('Error al cargar boletines de los estudiantes asociados', err);
+        return of([]);
+      })
+    ).subscribe(boletines => this.misBoletinesSignal.set(boletines));
+  }
+
+  getBoletinAcudido(estudianteId: number, periodoId: number) {
+    return this.http.get<BoletinPublicadoModel>(
+      `${this.apiUrl}/acudidos/${estudianteId}/periodos/${periodoId}`
+    );
+  }
+
+  downloadBoletinAcudido(estudianteId: number, boletinId: number): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/acudidos/${estudianteId}/${boletinId}/download`, {
+      responseType: 'blob'
+    });
   }
 
   publicarBoletines(payload: PublicarBoletinesDto) {

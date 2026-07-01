@@ -119,11 +119,25 @@ export class Horarios {
     const cursoId = this.selectedCursoId();
     if (!cursoId) return 'Selecciona un curso';
 
-    const curso = this.cursos().find(item => this.getCursoId(item) === cursoId);
+    const curso = this.cursosConsulta().find(item => this.getCursoId(item) === cursoId);
     return curso?.nombreCurso ?? this.currentStudent()?.curso?.nombreCurso ?? `Curso ${cursoId}`;
   });
 
   public currentUser = computed(() => this.authService.currentUser());
+  public isAcudienteProfile = this.authService.isAcudiente;
+
+  public cursosConsulta = computed(() => {
+    if (!this.isAcudienteProfile()) return this.cursos();
+
+    const uniqueCourses = new Map<number, CursoModel>();
+    this.estudiantesService.estudiantes().forEach(estudiante => {
+      const cursoId = this.getEstudianteCursoId(estudiante);
+      if (cursoId && estudiante.curso) {
+        uniqueCourses.set(cursoId, estudiante.curso as CursoModel);
+      }
+    });
+    return [...uniqueCourses.values()];
+  });
 
   public isStudentProfile = computed(() =>
     (this.currentUser()?.roles ?? []).some(role => role.name.toLowerCase().includes('estudiante'))
@@ -184,12 +198,14 @@ export class Horarios {
   });
 
   public pageTitle = computed(() => {
+    if (this.isAcudienteProfile()) return 'Horarios de mis estudiantes';
     if (this.isStudentProfile()) return 'Mi horario';
     if (this.isDocenteProfile()) return 'Mi horario docente';
     return 'Gestión de Horarios';
   });
 
   public pageSubtitle = computed(() => {
+    if (this.isAcudienteProfile()) return 'Consulta el horario semanal de los cursos asociados.';
     if (this.isStudentProfile()) return 'Consulta el horario semanal de tu curso.';
     if (this.isDocenteProfile()) return 'Consulta en que curso y hora dictas cada materia.';
     if (!this.canManageHorarios()) return 'Consulta las asignaciones por día y bloque de clase.';
@@ -239,6 +255,16 @@ export class Horarios {
   private loadHorariosByRoleEffect = effect(() => {
     if (!this.currentUser()) return;
 
+    if (this.isAcudienteProfile()) {
+      const firstCourseId = this.cursosConsulta().map(curso => this.getCursoId(curso)).find(id => !!id);
+      if (firstCourseId && !this.selectedCursoId()) this.selectedCursoId.set(firstCourseId);
+      if (!this.loadedGeneralHorarios) {
+        this.loadedGeneralHorarios = true;
+        this.horariosService.loadHorarios();
+      }
+      return;
+    }
+
     if (this.isStudentProfile()) {
       const cursoId = this.getEstudianteCursoId(this.currentStudent());
       if (!cursoId || this.loadedStudentCourseId === cursoId) return;
@@ -255,6 +281,11 @@ export class Horarios {
   });
 
   ngOnInit() {
+    if (this.isAcudienteProfile()) {
+      this.estudiantesService.loadMisAcudidos();
+      return;
+    }
+
     this.cursosService.loadCursos();
     this.cursosService.loadMaterias();
     this.cursosService.loadAsignaciones();
@@ -727,7 +758,7 @@ export class Horarios {
 
   private getSelectedCurso() {
     const cursoId = this.selectedCursoId();
-    return this.cursos().find(curso => this.getCursoId(curso) === cursoId);
+    return this.cursosConsulta().find(curso => this.getCursoId(curso) === cursoId);
   }
 
   private getAsignacionesForBlock(horaInicio: string, horaFin: string) {
