@@ -22,6 +22,11 @@ export const moduleGuard: CanActivateFn = (route, state) => {
     .toLowerCase()
     .trim();
 
+  const acudienteModules = ['estudiantes', 'observadores', 'horarios', 'boletines', 'eventos'];
+  if (authService.isAcudiente() && acudienteModules.includes(normalizedRequiredModule)) {
+    return true;
+  }
+
   const hasAccess = authService.userModules().includes(normalizedRequiredModule);
 
   if (hasAccess) {

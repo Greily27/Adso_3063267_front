@@ -17,13 +17,19 @@ export class EstudiantesService {
 
   public estudiantes = this.estudiantesSignal.asReadonly();
 
-  constructor() {
-    this.loadEstudiantes();
-  }
-
   loadEstudiantes() {
     this.http.get<EstudianteModel[]>(`${this.apiUrl}/estudiantes`).subscribe(data => {
       this.estudiantesSignal.set(data.map(estudiante => this.normalizeEstudiante(estudiante)));
+    });
+  }
+
+  loadMisAcudidos() {
+    this.http.get<EstudianteModel[]>(`${this.apiUrl}/estudiantes/mis-acudidos`).subscribe({
+      next: data => this.estudiantesSignal.set(data.map(estudiante => this.normalizeEstudiante(estudiante))),
+      error: err => {
+        console.error('Error al cargar los estudiantes asociados', err);
+        this.estudiantesSignal.set([]);
+      }
     });
   }
 

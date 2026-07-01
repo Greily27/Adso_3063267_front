@@ -2,8 +2,8 @@
   <section class="students-hero">
     <div>
       <span class="eyebrow">Comunidad academica</span>
-      <h1>Gestión de Estudiantes</h1>
-      <p>Administra datos personales, acudientes, curso y contacto de cada estudiante.</p>
+      <h1>{{ isAcudienteMode() ? 'Mis estudiantes' : 'Gestión de Estudiantes' }}</h1>
+      <p>{{ isAcudienteMode() ? 'Consulta los estudiantes asociados a tu cuenta.' : 'Administra datos personales, acudientes, curso y contacto de cada estudiante.' }}</p>
     </div>
 
     <div class="students-hero-actions">
@@ -42,7 +42,7 @@
   <section class="students-table-card">
     <div class="table-card-header">
       <div>
-        <h2>Listado de estudiantes</h2>
+        <h2>{{ isAcudienteMode() ? 'Estudiantes asociados' : 'Listado de estudiantes' }}</h2>
         <p>Haz clic en un estudiante para revisar la información completa.</p>
       </div>
     </div>

@@ -35,6 +35,9 @@ export class AdminLayoutComponent {
   private brokenCurrentUserPhoto = signal('');
   public menuItems = computed(() => {
     const modules = this.authService.userModules();
+    if (this.authService.isAcudiente()) {
+      return ['estudiantes', 'observadores', 'horarios', 'boletines', 'eventos'];
+    }
     const normalizedModules = modules.map(moduleName => this.getModuleRoute(moduleName));
     const currentUser = this.authService.currentUser();
     const roleNames = currentUser?.roles?.map(role => this.normalizeName(role.name)) ?? [];
@@ -66,6 +69,7 @@ export class AdminLayoutComponent {
     observadores: 'assignment',
     periodos: 'event',
     boletines: 'article',
+    eventos: 'event_available',
     auditorios: 'event_seat',
     'reservas-auditorio': 'event_seat',
     perfil: 'account_circle',
@@ -133,6 +137,10 @@ export class AdminLayoutComponent {
     return `/${this.getModuleRoute(moduleName)}`;
   }
 
+  getHomeLink() {
+    return this.authService.isAcudiente() ? '/estudiantes' : '/dashboard';
+  }
+
   getModuleIcon(moduleName: string) {
     return this.moduleIcons[this.getModuleRoute(moduleName)] ?? 'apps';
   }
@@ -151,6 +159,7 @@ export class AdminLayoutComponent {
       observadores: 'Observadores',
       periodos: 'Períodos',
       boletines: 'Boletines',
+      eventos: 'Eventos',
       auditorios: 'Auditorios',
       'reservas-auditorio': 'Auditorios',
       perfil: 'Perfil'

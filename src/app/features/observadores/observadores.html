@@ -1,6 +1,6 @@
 ﻿<div class="header">
   <div class="title-row">
-    <h1>Gestión de Observadores</h1>
+    <h1>{{ isAcudiente() ? 'Observadores de mis estudiantes' : 'Gestión de Observadores' }}</h1>
     @if (canManageObservadores()) {
       <button mat-raised-button color="primary" (click)="openPanel()">
         {{ showCreatePanel ? 'Ocultar panel' : 'Nuevo observador' }}

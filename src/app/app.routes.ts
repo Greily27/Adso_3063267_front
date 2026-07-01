@@ -2,6 +2,7 @@
 import { AdminLayoutComponent } from './core/components/admin-layout/admin-layout.component';
 import { authGuard } from './core/guards/auth.guard';
 import { moduleGuard } from './core/guards/module.guard';
+import { dashboardGuard } from './core/guards/dashboard.guard';
 
 export const routes: Routes = [
     {
@@ -15,6 +16,7 @@ export const routes: Routes = [
         children: [
             {
                 path: 'dashboard',
+                canActivate: [dashboardGuard],
                 loadComponent: () => import('./features/dashboard/dashboard').then(m => m.Dashboard)
             },
             {
@@ -90,6 +92,12 @@ export const routes: Routes = [
             {
                 path: 'boletines',
                 loadComponent: () => import('./features/boletines/boletines').then(m => m.Boletines)
+            },
+            {
+                path: 'eventos',
+                canActivate: [moduleGuard],
+                data: { module: 'eventos' },
+                loadComponent: () => import('./features/eventos/eventos').then(m => m.Eventos)
             },
             {
                 path: 'auditorios',

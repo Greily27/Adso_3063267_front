@@ -60,6 +60,7 @@ export class Auth {
   // 2. Selectores pÃºblicos (Computed) - Reaccionan automÃ¡ticamente
   public currentUser = computed(() => this._authStatus()?.user);
   public isAuthenticated = computed(() => !!this._authStatus());
+  public isAcudiente = computed(() => this.hasRole('acudiente'));
 
 
   public userModules = computed(() => {
@@ -184,5 +185,20 @@ export class Auth {
         ...updatedUser
       }
     });
+  }
+
+  public hasRole(roleName: string): boolean {
+    const expectedRole = this.normalizeRoleName(roleName);
+    return this.currentUser()?.roles?.some(role =>
+      this.normalizeRoleName(role.name) === expectedRole
+    ) ?? false;
+  }
+
+  private normalizeRoleName(roleName: string) {
+    return roleName
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-zA-Z0-9]/g, '')
+      .toLowerCase();
   }
 }

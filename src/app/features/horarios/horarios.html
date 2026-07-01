@@ -80,7 +80,7 @@
           <mat-form-field appearance="outline" class="course-select">
             <mat-label>Curso</mat-label>
             <mat-select [value]="selectedCursoId()" (selectionChange)="selectCurso($event.value)">
-              @for (curso of cursos(); track curso.id ?? curso.idCurso) {
+              @for (curso of cursosConsulta(); track curso.id ?? curso.idCurso) {
                 <mat-option [value]="curso.id ?? curso.idCurso">{{ curso.nombreCurso }}</mat-option>
               } @empty {
                 <mat-option disabled>No hay cursos registrados</mat-option>
@@ -164,7 +164,7 @@
     </section>
   }
 
-  @if (canViewHorarios()) {
+  @if (canViewHorarios() && !isAcudienteProfile()) {
     <section class="teacher-schedule-section">
     <div class="schedule-toolbar">
       <div>

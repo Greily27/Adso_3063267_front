@@ -3,19 +3,21 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { catchError, of, tap } from 'rxjs';
 import { CreatePeriodoDto, PeriodoModel, UpdatePeriodoDto } from '../models/periodo.model';
+import { Auth } from '../../../core/services/auth';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PeriodosService {
   private http = inject(HttpClient);
+  private auth = inject(Auth);
   private apiUrl = `${API_BASE_URL}/periodo`;
 
   private periodosSignal = signal<PeriodoModel[]>([]);
   public periodos = this.periodosSignal.asReadonly();
 
   constructor() {
-    this.loadPeriodos();
+    if (!this.auth.isAcudiente()) this.loadPeriodos();
   }
 
   loadPeriodos() {

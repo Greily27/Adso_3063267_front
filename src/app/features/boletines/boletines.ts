@@ -89,6 +89,7 @@ export class Boletines {
   public currentUser = this.authService.currentUser;
   public misBoletines = this.boletinesService.misBoletines;
   public boletinesPublicados = this.boletinesService.boletinesPublicados;
+  public isAcudienteMode = this.authService.isAcudiente;
 
   public misBoletinesFiltrados = computed(() => {
     const periodoId = this.selectedPeriodoId();
@@ -289,6 +290,12 @@ export class Boletines {
   }
 
   public reloadData() {
+    if (this.isAcudienteMode()) {
+      this.estudiantesService.loadMisAcudidos();
+      this.boletinesService.loadBoletinesAcudidos();
+      return;
+    }
+
     this.cursosService.loadCursos();
     this.periodosService.loadPeriodos();
     this.estudiantesService.loadEstudiantes();
@@ -417,11 +424,55 @@ export class Boletines {
     }
   }
 
+  public verBoletinAcudido(boletin: BoletinPublicadoModel) {
+    const periodoId = this.getBoletinPeriodoId(boletin);
+    if (!boletin.estudianteId || !periodoId) return;
+
+    this.boletinesService.getBoletinAcudido(boletin.estudianteId, periodoId).subscribe({
+      next: detalle => {
+        const boletinCompleto = { ...boletin, ...detalle };
+        const url = this.getPublishedBoletinUrl(boletinCompleto);
+        if (url) {
+          const openedWindow = window.open(url, '_blank', 'noopener,noreferrer');
+          if (!openedWindow) window.location.href = url;
+          return;
+        }
+
+        this.descargarBoletinPublicado(boletinCompleto);
+      },
+      error: err => {
+        console.error('Error al consultar el boletín', err);
+        this.publishMessage.set(this.getErrorMessage(err, 'No se pudo consultar el boletín.'));
+      }
+    });
+  }
+
   public getPublishedBoletinUrl(boletin: BoletinPublicadoModel) {
     return this.boletinesService.getBoletinUrl(boletin);
   }
 
   public descargarBoletinPublicado(boletin: BoletinPublicadoModel) {
+    if (this.isAcudienteMode()) {
+      const boletinId = Number(boletin.idBoletin ?? boletin.id);
+      if (!boletin.estudianteId || !boletinId) return;
+
+      this.boletinesService.downloadBoletinAcudido(boletin.estudianteId, boletinId).subscribe({
+        next: blob => {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `boletin-${boletin.estudianteId}-${this.getBoletinPeriodoId(boletin)}.pdf`;
+          link.click();
+          URL.revokeObjectURL(url);
+        },
+        error: err => {
+          console.error('Error al descargar el boletín', err);
+          this.publishMessage.set(this.getErrorMessage(err, 'No se pudo descargar el boletín.'));
+        }
+      });
+      return;
+    }
+
     const url = this.getPublishedBoletinUrl(boletin);
     if (!url) return;
 
@@ -439,6 +490,12 @@ export class Boletines {
     return boletin.periodo?.nombrePeriodo
       ?? this.periodos().find(periodo => this.getPeriodoId(periodo) === this.getBoletinPeriodoId(boletin))?.nombrePeriodo
       ?? `Periodo ${this.getBoletinPeriodoId(boletin)}`;
+  }
+
+  public getPublishedStudentName(boletin: BoletinPublicadoModel) {
+    return boletin.estudiante
+      ? this.getStudentName(boletin.estudiante)
+      : `Estudiante ${boletin.estudianteId}`;
   }
 
   public getPublishedDate(boletin: BoletinPublicadoModel) {
@@ -531,12 +588,16 @@ export class Boletines {
   }
 
   public getPageTitle() {
+    if (this.isAcudienteMode()) return 'Boletines de mis estudiantes';
     if (this.isStudentMode()) return 'Mi boletin';
     if (this.isDocenteMode()) return 'Boletines de mi curso';
     return 'Boletines';
   }
 
   public getPageDescription() {
+    if (this.isAcudienteMode()) {
+      return 'Consulta y descarga los boletines publicados de tus estudiantes asociados.';
+    }
     if (this.isStudentMode()) {
       return 'Consulta tu boletin academico por periodo y descargalo para conservar una copia.';
     }

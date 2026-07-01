@@ -4,12 +4,14 @@ import { inject, Injectable, signal } from '@angular/core';
 import { map, tap } from 'rxjs';
 import { AsignacionModel, CreateAsignacionDto, CreateCursoDto, CursoModel, MateriaModel, UpdateCursoDto } from '../models/curso.model';
 import { UserModel } from '../../users/models/user.model';
+import { Auth } from '../../../core/services/auth';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CursosService {
   private http = inject(HttpClient);
+  private auth = inject(Auth);
   private apiUrl = API_BASE_URL;
 
   private cursosSignal = signal<CursoModel[]>([]);
@@ -21,6 +23,7 @@ export class CursosService {
   public asignaciones = this.asignacionesSignal.asReadonly();
 
   constructor() {
+    if (this.auth.isAcudiente()) return;
     this.loadCursos();
     this.loadMaterias();
     this.loadAsignaciones();

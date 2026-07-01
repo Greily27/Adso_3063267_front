@@ -5,18 +5,22 @@ import { map, tap } from 'rxjs';
 import { RoleModel } from '../../roles/models/roles.model';
 import { MateriaModel } from '../../materias/models/materia.model';
 import { CreateUserDto, UpdateUserDto, UserModel } from '../models/user.model';
+import { Auth } from '../../../core/services/auth';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UsersService {
   private http = inject(HttpClient);
+  private auth = inject(Auth);
   private apiUrl = `${API_BASE_URL}/users`;
 
   private userSignal = signal<UserModel[]>([]);
   public users = this.userSignal.asReadonly();
 
-  constructor() { this.loadUsers(); }
+  constructor() {
+    if (!this.auth.isAcudiente()) this.loadUsers();
+  }
 
   loadUsers() {
     this.http.get<UserModel[]>(this.apiUrl).subscribe(data => {

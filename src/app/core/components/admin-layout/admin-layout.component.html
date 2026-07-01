@@ -25,11 +25,11 @@
     </mat-toolbar>
     @if (authService.isAuthenticated()) {
       <mat-nav-list class="sidebar-nav">
-        <a mat-list-item class="nav-item" routerLink="/dashboard" routerLinkActive="active-link" (click)="onModuleClick(drawer)">
+        <a mat-list-item class="nav-item" [routerLink]="getHomeLink()" routerLinkActive="active-link" (click)="onModuleClick(drawer)">
           <span matListItemIcon class="nav-icon">
             <mat-icon>dashboard</mat-icon>
           </span>
-          <span matListItemTitle>Dashboard</span>
+          <span matListItemTitle>{{ authService.isAcudiente() ? 'Inicio' : 'Dashboard' }}</span>
         </a>
         
         @for (moduleName of menuItems(); track moduleName) {
