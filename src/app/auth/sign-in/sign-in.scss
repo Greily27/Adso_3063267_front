@@ -1,0 +1,161 @@
+.access-page {
+  box-sizing: border-box;
+  display: grid;
+  min-height: 100dvh;
+  place-items: center;
+  padding: 32px 18px;
+  background:
+    radial-gradient(circle at top left, rgba(20, 107, 80, 0.2), transparent 36%),
+    linear-gradient(145deg, #eef7f1, #ffffff 55%, #e6f2eb);
+}
+
+.access-card {
+  box-sizing: border-box;
+  width: min(100%, 720px);
+  padding: clamp(24px, 5vw, 48px);
+  border: 1px solid #d8e7de;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 24px 70px rgba(6, 66, 37, 0.14);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: #0b3b2e;
+  text-decoration: none;
+}
+
+.brand img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
+.brand span {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand strong {
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+}
+
+.brand small {
+  color: #64736d;
+}
+
+.access-icon {
+  display: grid;
+  width: 78px;
+  height: 78px;
+  margin: 36px 0 20px;
+  place-items: center;
+  border-radius: 50%;
+  background: #dff3e9;
+  color: #146b50;
+}
+
+.access-icon mat-icon {
+  width: 40px;
+  height: 40px;
+  font-size: 40px;
+}
+
+.eyebrow {
+  color: #146b50;
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 7px 0 10px;
+  color: #10231d;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.05;
+}
+
+.lead {
+  max-width: 610px;
+  margin: 0;
+  color: #53645e;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.steps {
+  display: grid;
+  gap: 12px;
+  margin: 30px 0;
+}
+
+.steps article {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid #e0ebe4;
+  border-radius: 12px;
+  background: #f8fbf9;
+}
+
+.steps article > span {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border-radius: 50%;
+  background: #146b50;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.steps h2 {
+  margin: 2px 0 4px;
+  color: #173d30;
+  font-size: 1rem;
+}
+
+.steps p {
+  margin: 0;
+  color: #64736d;
+  line-height: 1.45;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.actions a {
+  min-height: 46px;
+}
+
+@media (max-width: 520px) {
+  .access-page {
+    align-items: start;
+    padding: 0;
+    background: #ffffff;
+  }
+
+  .access-card {
+    min-height: 100dvh;
+    padding: 24px 18px 32px;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .access-icon {
+    margin-top: 28px;
+  }
+
+  .actions {
+    display: grid;
+  }
+}
