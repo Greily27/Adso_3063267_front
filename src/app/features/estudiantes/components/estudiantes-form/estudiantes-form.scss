@@ -9,6 +9,23 @@ mat-form-field {
   width: 100%;
 }
 
+.form-section-title {
+  grid-column: 1 / -1;
+  padding: 4px 0;
+}
+
+.form-section-title h3 {
+  margin: 0;
+  color: var(--app-green-900);
+  font-size: 1rem;
+}
+
+.form-section-title p {
+  margin: 4px 0 0;
+  color: var(--app-muted);
+  font-size: 0.84rem;
+}
+
 :host ::ng-deep .mat-mdc-dialog-title {
   color: #18362d;
   font-weight: 850;

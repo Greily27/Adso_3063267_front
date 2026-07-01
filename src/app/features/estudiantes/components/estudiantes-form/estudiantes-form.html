@@ -2,6 +2,11 @@
 
 <form [formGroup]="form">
   <mat-dialog-content class="form-container">
+    <div class="form-section-title">
+      <h3>Acudiente principal</h3>
+      <p>Ingresa sus datos de contacto. No necesitas crearle un usuario ni asignarle una contraseña.</p>
+    </div>
+
     <mat-form-field appearance="outline">
       <mat-label>Tipo documento tutor</mat-label>
       <mat-select formControlName="tipoDocTutor">
@@ -41,8 +46,13 @@
       <input matInput formControlName="telefonoTutor">
     </mat-form-field>
 
+    <div class="form-section-title">
+      <h3>Datos del estudiante</h3>
+      <p>Puedes seleccionar un usuario estudiante existente o completar los datos para crear uno nuevo.</p>
+    </div>
+
     <mat-form-field appearance="outline">
-      <mat-label>Usuario</mat-label>
+      <mat-label>Usuario del estudiante (opcional)</mat-label>
       <mat-select formControlName="user" [compareWith]="compareById">
         @for (user of usuariosFiltrados(); track user.id) {
           <mat-option [value]="user">
@@ -116,7 +126,7 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>{{ isEditMode ? 'Nueva contraseña usuario' : 'Contraseña usuario' }}</mat-label>
+      <mat-label>{{ isEditMode ? 'Nueva contraseña del estudiante' : 'Contraseña del estudiante' }}</mat-label>
       <input matInput type="password" formControlName="password">
     </mat-form-field>
 

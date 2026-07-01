@@ -272,7 +272,10 @@ export class Estudiantes {
         this.createStudentFromFormValue(result).subscribe({
           next: () => {
             this.estudiantesService.loadEstudiantes();
-            this.showSuccess('Estudiante creado', 'El estudiante se guardo correctamente.');
+            this.showSuccess(
+              'Estudiante creado',
+              'Estudiante creado correctamente. Si el acudiente era nuevo, recibirá un correo para establecer su contraseña.'
+            );
           },
           error: (err: HttpErrorResponse) => {
             console.error('Error al crear estudiante', err);
@@ -310,7 +313,10 @@ export class Estudiantes {
           next: () => {
             this.isImporting.set(false);
             this.estudiantesService.loadEstudiantes();
-            this.showSuccess('Estudiantes importados', `Se importaron ${formValues.length} estudiante${formValues.length === 1 ? '' : 's'} correctamente.`);
+            this.showSuccess(
+              'Estudiantes importados',
+              `Se importaron ${formValues.length} estudiante${formValues.length === 1 ? '' : 's'} correctamente. Si algún acudiente era nuevo, recibirá un correo para establecer su contraseña.`
+            );
           },
           error: (err: HttpErrorResponse) => {
             this.isImporting.set(false);
