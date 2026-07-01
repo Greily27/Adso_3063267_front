@@ -148,9 +148,38 @@ export class Eventos {
   }
 
   getImageUrl(evento: EventoModel) {
-    const url = (evento.imagenUrl ?? evento.imagen ?? '').trim();
-    if (!url || url.startsWith('data:') || /^https?:\/\//i.test(url)) return url;
-    return `${API_BASE_URL}/${url.replace(/\\/g, '/').replace(/^\/+/, '')}`;
+    const url = (
+      evento.imagenUrl
+      ?? evento.imageUrl
+      ?? evento.rutaImagen
+      ?? evento.imagenPath
+      ?? evento.imagen
+      ?? ''
+    ).trim();
+
+    if (!url || url.startsWith('data:')) return url;
+
+    if (/^https?:\/\//i.test(url)) {
+      try {
+        const parsedUrl = new URL(url);
+        if (['localhost', '127.0.0.1', '0.0.0.0'].includes(parsedUrl.hostname)) {
+          return `${API_BASE_URL}${parsedUrl.pathname}${parsedUrl.search}`;
+        }
+      } catch {
+        return url;
+      }
+      return url;
+    }
+
+    const relativePath = url
+      .replace(/\\/g, '/')
+      .replace(/^\.?\//, '')
+      .replace(/^\/+/, '');
+    const staticPath = relativePath.startsWith('uploads/')
+      ? relativePath
+      : `uploads/${relativePath}`;
+
+    return `${API_BASE_URL}/${staticPath}`;
   }
 
   formatDate(value: string) {
