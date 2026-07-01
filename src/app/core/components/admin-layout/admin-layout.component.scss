@@ -1,10 +1,14 @@
 .sidenav-container {
-  height: 100%;
+  width: 100%;
+  height: 100dvh;
+  min-height: 100%;
+  overflow: hidden;
   background: var(--app-page-bg);
 }
 
 .sidenav {
   width: 248px;
+  height: 100%;
   max-width: 86vw;
   border-right: 1px solid var(--app-line);
   background: linear-gradient(180deg, var(--app-surface) 0, var(--app-soft) 100%);
@@ -21,9 +25,18 @@
   }
 }
 
+:host ::ng-deep .sidenav .mat-drawer-inner-container {
+  display: flex !important;
+  height: 100%;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden !important;
+}
+
 .sidebar-brand {
   display: flex;
   align-items: center;
+  flex: 0 0 92px;
   gap: 14px;
   height: 92px;
   padding: 0 18px;
@@ -69,12 +82,32 @@
 }
 
 .sidebar-nav {
-  display: flex;
+  display: flex !important;
+  height: 0;
+  min-height: 0;
+  flex: 1 1 0;
   flex-direction: column;
   gap: 6px;
-  max-height: calc(100vh - 104px);
-  overflow-y: auto;
+  max-height: none;
+  overflow-x: hidden !important;
+  overflow-y: scroll !important;
+  overscroll-behavior-y: contain;
   padding: 10px 12px 16px;
+  scrollbar-color: var(--app-green-700) transparent;
+  scrollbar-width: thin;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+.sidebar-nav::-webkit-scrollbar {
+  width: 7px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: var(--app-green-700);
+  background-clip: padding-box;
 }
 
 .nav-item {
@@ -120,10 +153,16 @@
 }
 
 mat-sidenav-content {
+  height: 100%;
+  min-width: 0;
   background:
     linear-gradient(180deg, var(--app-page-bg) 0, var(--app-soft) 260px),
     var(--app-soft);
-  overflow-x: hidden;
+  overflow-x: hidden !important;
+  overflow-y: scroll !important;
+  overscroll-behavior-y: auto;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
 }
 
 .topbar {
@@ -286,17 +325,18 @@ mat-sidenav-content {
   }
 
   .sidebar-brand {
+    flex-basis: 88px;
     height: 88px;
     padding: 0 14px;
   }
 
   .sidebar-nav {
-    max-height: calc(100dvh - 88px);
     padding-bottom: calc(18px + env(safe-area-inset-bottom));
   }
 
   mat-sidenav-content {
-    padding-top: calc(72px + env(safe-area-inset-top));
+    height: 100dvh;
+    padding-top: 0;
   }
 
   .topbar {
@@ -371,8 +411,13 @@ mat-sidenav-content {
 
   .page-content {
     width: 100%;
+    min-height: 100dvh;
     overflow-x: hidden;
-    padding: 16px 16px calc(24px + env(safe-area-inset-bottom));
+    overflow-y: visible;
+    padding:
+      calc(88px + env(safe-area-inset-top))
+      16px
+      calc(24px + env(safe-area-inset-bottom));
   }
 }
 
