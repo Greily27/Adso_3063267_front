@@ -10,7 +10,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { forkJoin, map, of, switchMap } from 'rxjs';
 import Swal from 'sweetalert2';
 import { Auth } from '../../core/services/auth';
-import { API_BASE_URL } from '../../core/config/api.config';
 import { AsignacionModel, CursoModel as CursoAsignacionModel, MateriaModel } from '../cursos/models/curso.model';
 import { CursosService } from '../cursos/services/cursos-service';
 import { CursoModel as EstudianteCursoModel, EstudianteModel, UpdateEstudianteDto } from '../estudiantes/models/estudiante.model';
@@ -20,6 +19,7 @@ import { HorariosService } from '../horarios/services/horarios-service';
 import { UpdateUserDto, UserModel } from '../users/models/user.model';
 import { UsersService } from '../users/services/users-service';
 import { fileToCompressedImageDataUrl } from '../../shared/utils/image-file.util';
+import { resolveProfilePhotoUrl } from '../../shared/utils/profile-photo-url.util';
 
 interface BloquePerfilHorario {
   horaInicio: string;
@@ -119,8 +119,8 @@ export class Perfil {
   });
 
   public profilePhoto() {
-    return this.getValidPhotoSource(this.form.controls.photo.value)
-      || this.getValidPhotoSource(this.currentUser()?.photo)
+    return resolveProfilePhotoUrl(this.form.controls.photo.value)
+      || resolveProfilePhotoUrl(this.currentUser()?.photo)
       || '';
   }
 
@@ -290,6 +290,8 @@ export class Perfil {
       next: ({ user: updatedUser }) => {
         this.isSaving = false;
         this.selectedPhotoFile.set(null);
+        this.brokenProfilePhoto.set('');
+        this.form.controls.photo.setValue(updatedUser.photo ?? user.photo ?? '');
         this.form.controls.password.setValue('');
         this.authService.updateLocalUser({
           ...user,
@@ -350,50 +352,6 @@ export class Perfil {
       ocupacionTutor: estudiante?.ocupacionTutor ?? '',
       telefonoTutor: estudiante?.telefonoTutor ?? ''
     });
-  }
-
-  private getValidPhotoSource(photo?: string | null) {
-    const cleanPhoto = photo?.trim();
-    const normalizedPhoto = cleanPhoto?.toLowerCase();
-
-    if (!cleanPhoto || normalizedPhoto === 'default.jpg' || normalizedPhoto?.includes('colplinista')) {
-      return '';
-    }
-
-    if (this.isRawBase64Image(cleanPhoto)) {
-      return `data:image/${this.getBase64ImageType(cleanPhoto)};base64,${cleanPhoto}`;
-    }
-
-    if (
-      cleanPhoto.startsWith('data:image/')
-      || cleanPhoto.startsWith('http://')
-      || cleanPhoto.startsWith('https://')
-    ) {
-      return cleanPhoto;
-    }
-
-    const relativePhotoPath = cleanPhoto
-      .replace(/\\/g, '/')
-      .replace(/^\.?\//, '')
-      .replace(/^\/+/, '');
-
-    const staticPhotoPath = relativePhotoPath.startsWith('uploads/')
-      ? relativePhotoPath
-      : `uploads/${relativePhotoPath}`;
-
-    return `${API_BASE_URL}/${staticPhotoPath}`;
-  }
-
-  private isRawBase64Image(value: string) {
-    return /^(\/9j\/|iVBORw0KGgo|R0lGODlh|UklGR)/.test(value);
-  }
-
-  private getBase64ImageType(value: string) {
-    if (value.startsWith('iVBORw0KGgo')) return 'png';
-    if (value.startsWith('R0lGODlh')) return 'gif';
-    if (value.startsWith('UklGR')) return 'webp';
-
-    return 'jpeg';
   }
 
   private toUserDto(value: ReturnType<typeof this.form.getRawValue>, currentUser: UserModel): UpdateUserDto {
