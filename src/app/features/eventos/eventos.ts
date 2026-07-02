@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import Swal from 'sweetalert2';
-import { API_BASE_URL } from '../../core/config/api.config';
+import { resolveApiImageUrl } from '../../shared/utils/profile-photo-url.util';
 import { Auth } from '../../core/services/auth';
 import { EventoDestinatario, EventoEstado, EventoFormValue, EventoModel } from './models/evento.model';
 import { EventosService } from './services/eventos-service';
@@ -148,38 +148,14 @@ export class Eventos {
   }
 
   getImageUrl(evento: EventoModel) {
-    const url = (
+    return resolveApiImageUrl(
       evento.imagenUrl
       ?? evento.imageUrl
       ?? evento.rutaImagen
       ?? evento.imagenPath
       ?? evento.imagen
       ?? ''
-    ).trim();
-
-    if (!url || url.startsWith('data:')) return url;
-
-    if (/^https?:\/\//i.test(url)) {
-      try {
-        const parsedUrl = new URL(url);
-        if (['localhost', '127.0.0.1', '0.0.0.0'].includes(parsedUrl.hostname)) {
-          return `${API_BASE_URL}${parsedUrl.pathname}${parsedUrl.search}`;
-        }
-      } catch {
-        return url;
-      }
-      return url;
-    }
-
-    const relativePath = url
-      .replace(/\\/g, '/')
-      .replace(/^\.?\//, '')
-      .replace(/^\/+/, '');
-    const staticPath = relativePath.startsWith('uploads/')
-      ? relativePath
-      : `uploads/${relativePath}`;
-
-    return `${API_BASE_URL}/${staticPath}`;
+    );
   }
 
   formatDate(value: string) {
