@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Auth } from '../../services/auth';
-import { API_BASE_URL } from '../../config/api.config';
+import { resolveProfilePhotoUrl } from '../../../shared/utils/profile-photo-url.util';
 
 @Component({
   selector: 'app-admin-layout',
@@ -96,7 +96,7 @@ export class AdminLayoutComponent {
   }
 
   getCurrentUserPhoto() {
-    return this.getValidPhotoSource(this.currentUser()?.photo);
+    return resolveProfilePhotoUrl(this.currentUser()?.photo);
   }
 
   hasCurrentUserPhoto() {
@@ -198,50 +198,6 @@ export class AdminLayoutComponent {
       .replace(/[\u0300-\u036f]/g, '')
       .toLowerCase()
       .trim();
-  }
-
-  private getValidPhotoSource(photo?: string | null) {
-    const cleanPhoto = photo?.trim();
-    const normalizedPhoto = cleanPhoto?.toLowerCase();
-
-    if (!cleanPhoto || normalizedPhoto === 'default.jpg' || normalizedPhoto?.includes('colplinista')) {
-      return '';
-    }
-
-    if (this.isRawBase64Image(cleanPhoto)) {
-      return `data:image/${this.getBase64ImageType(cleanPhoto)};base64,${cleanPhoto}`;
-    }
-
-    if (
-      cleanPhoto.startsWith('data:image/')
-      || cleanPhoto.startsWith('http://')
-      || cleanPhoto.startsWith('https://')
-    ) {
-      return cleanPhoto;
-    }
-
-    const relativePhotoPath = cleanPhoto
-      .replace(/\\/g, '/')
-      .replace(/^\.?\//, '')
-      .replace(/^\/+/, '');
-
-    const staticPhotoPath = relativePhotoPath.startsWith('uploads/')
-      ? relativePhotoPath
-      : `uploads/${relativePhotoPath}`;
-
-    return `${API_BASE_URL}/${staticPhotoPath}`;
-  }
-
-  private isRawBase64Image(value: string) {
-    return /^(\/9j\/|iVBORw0KGgo|R0lGODlh|UklGR)/.test(value);
-  }
-
-  private getBase64ImageType(value: string) {
-    if (value.startsWith('iVBORw0KGgo')) return 'png';
-    if (value.startsWith('R0lGODlh')) return 'gif';
-    if (value.startsWith('UklGR')) return 'webp';
-
-    return 'jpeg';
   }
 
   private setTheme(isDark: boolean) {
