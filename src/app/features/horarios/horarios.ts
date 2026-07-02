@@ -151,9 +151,13 @@ export class Horarios {
   );
 
   public isAuxiliarAdministrativoProfile = computed(() =>
-    (this.currentUser()?.roles ?? []).some(role =>
-      role.id === 6 || this.normalizeRoleName(role.name).includes('auxiliaradministrativo')
-    )
+    (this.currentUser()?.roles ?? []).some(role => {
+      const roleName = this.normalizeRoleName(role.name);
+
+      return role.id === 6
+        || roleName.includes('auxiliaradministrativo')
+        || roleName.includes('auxadministrativo');
+    })
   );
 
   public isDocenteProfile = computed(() =>

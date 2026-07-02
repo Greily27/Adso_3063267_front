@@ -1,12 +1,11 @@
 ﻿import { CommonModule } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, Injector } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Auth } from '../../core/services/auth';
 import { CursosService } from '../cursos/services/cursos-service';
 import { EstudiantesService } from '../estudiantes/services/estudiantes-service';
-import { MateriasService } from '../materias/services/materias-service';
 import { UsersService } from '../users/services/users-service';
 import { NotasService } from '../notas/services/notas-service';
 import { ObservadoresService } from '../observadores/services/observadores-service';
@@ -23,14 +22,23 @@ import { UserModel } from '../users/models/user.model';
   styleUrl: './dashboard.scss',
 })
 export class Dashboard {
+  private injector = inject(Injector);
   private authService = inject(Auth);
   private usersService = inject(UsersService);
   private estudiantesService = inject(EstudiantesService);
   private cursosService = inject(CursosService);
-  private materiasService = inject(MateriasService);
-  private notasService = inject(NotasService);
-  private observadoresService = inject(ObservadoresService);
-  private periodosService = inject(PeriodosService);
+
+  private get notasService() {
+    return this.injector.get(NotasService);
+  }
+
+  private get observadoresService() {
+    return this.injector.get(ObservadoresService);
+  }
+
+  private get periodosService() {
+    return this.injector.get(PeriodosService);
+  }
 
   public today = new Date();
 
@@ -74,7 +82,7 @@ export class Dashboard {
     );
 
     const materiasFromUser = this.currentUser()?.materias ?? [];
-    const materiasFromService = this.materiasService.materias()
+    const materiasFromService = this.cursosService.materias()
       .filter(materia => materiaIds.has(this.getMateriaId(materia)));
 
     return [...materiasFromUser, ...materiasFromService]
@@ -216,7 +224,11 @@ export class Dashboard {
   public estudianteCursoName = computed(() => this.getCursoName(this.estudianteCurso()));
 
   ngOnInit() {
-    this.observadoresService.loadObservadores();
+    this.estudiantesService.loadEstudiantes();
+
+    if (this.isEstudiante()) {
+      this.observadoresService.loadObservadores();
+    }
   }
 
   public stats = computed(() => {
@@ -257,7 +269,7 @@ export class Dashboard {
   });
 
   public summary = computed(() => ({
-    materias: this.materiasService.materias().length,
+    materias: this.cursosService.materias().length,
     modulos: this.authService.userModules().length,
     accesos: this.authService.userModules().length,
     usuarios: this.usersService.users().length
